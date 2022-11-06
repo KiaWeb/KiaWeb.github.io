@@ -3,49 +3,10 @@
 	<head>
 		<title>Anistick Video Player Example</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<script type="text/javascript" src="swfobject.js"></script>
-		<script type="text/javascript">
-			<!-- Adobe recommends that developers use SWFObject2 for Flash Player detection. -->
-			<!-- For more information see the SWFObject page at Google code (http://code.google.com/p/swfobject/). -->
-			<!-- Information is also available on the Adobe Developer Connection Under Detecting Flash Player versions and embedding SWF files with SWFObject 2" -->
-			<!-- Set to minimum required Flash Player version or 0 for no version detection -->
-			var swfVersionStr = "32.0.0.363";
-			<!-- xiSwfUrlStr can be used to define an express installer SWF. -->
-			var xiSwfUrlStr = "https://github.com/danro/swfobject-js/raw/master/expressInstall.swf";
-			var flashvars = {};
-			flashvars.vURL = "http%3A%2F%2Fcommondatastorage.googleapis.com%2Fgtv-videos-bucket%2Fsample%2FBigBuckBunny.mp4";
-			var params = {};
-			params.quality = "best";
-			params.bgcolor = "#ffffff";
-			params.play = "true";
-			params.loop = "false";
-			params.wmode = "wgpu";
-			params.scale = "showall";
-			params.devicefont = "false";
-			params.salign = "r";
-			params.allowScriptAccess = "always";
-			params.allowFullScreen = "true";
-			var attributes = {};
-			attributes.id = "vp";
-			attributes.name = "vp";
-			attributes.align = "middle";
-			swfobject.createCSS("html", "height:100%; background-color: #ffffff;");
-			swfobject.createCSS("body", "margin:0; padding:0; overflow:hidden; height:100%;");
-			swfobject.embedSWF(
-				"https://s3.anistick.com/video/latest.swf", "flashContent",
-				"1920", "1080",
-				swfVersionStr, xiSwfUrlStr,
-				flashvars, params, attributes);
-		</script>
 	</head>
 	<body>
 		<!-- SWFObject's dynamic embed method replaces this alternative HTML content for Flash content when enough JavaScript and Flash plug-in support is available. -->
 		<p>Left click to toggle pause. Right click to open context menu.</p>
-		<div id="flashContent">
-			<a href="http://www.adobe.com/go/getflash">
-				<img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" />
-			</a>
-			<p>This page requires Flash Player version 32.0.0.363 or higher.</p>
-		</div>
+		<object id="obj" data="https://s3.anistick.com/video/latest.swf" type="application/x-shockwave-flash" width="100%" height="100%"><param name="flashvars" value="vURL=http%3A%2F%2Fcommondatastorage.googleapis.com%2Fgtv-videos-bucket%2Fsample%2FBigBuckBunny.mp4"> <param name="allowScriptAccess" value="always"></object>
 	</body>
 </html>
