@@ -1,4 +1,44 @@
 @charset "UTF-8";
+@font-face {
+    font-family: 'Source Sans Pro';
+    src: url('https://KiaWeb.github.io/fonts/SourceSansPro-Regular.otf');
+}
+@font-face {
+    font-family: 'Source Sans Pro Black';
+    src: url('https://KiaWeb.github.io/fonts/SourceSansPro-Black.otf');
+}
+@font-face {
+    font-family: 'Source Sans Pro Black Italic';
+    src: url('https://KiaWeb.github.io/fonts/SourceSansPro-BlackIt.otf');
+}
+@font-face {
+    font-family: 'Source Sans Pro Bold';
+    src: url('https://KiaWeb.github.io/fonts/SourceSansPro-Bold.otf');
+}
+@font-face {
+    font-family: 'Source Sans Pro Bold Italic';
+    src: url('https://KiaWeb.github.io/fonts/SourceSansPro-BoldIt.otf');
+}
+@font-face {
+    font-family: 'Source Sans Pro Extra Light';
+    src: url('https://KiaWeb.github.io/fonts/SourceSansPro-ExtraLight.otf');
+}
+@font-face {
+    font-family: 'Source Sans Pro Extra Light Italic';
+    src: url('https://KiaWeb.github.io/fonts/SourceSansPro-ExtraLightIt.otf');
+}
+@font-face {
+    font-family: 'Source Sans Pro Italic';
+    src: url('https://KiaWeb.github.io/fonts/SourceSansPro-It.otf');
+}
+@font-face {
+    font-family: 'Source Sans Pro Light';
+    src: url('https://KiaWeb.github.io/fonts/SourceSansPro-Light.otf');
+}
+@font-face {
+    font-family: 'Source Sans Pro Light Italic';
+    src: url('https://KiaWeb.github.io/fonts/SourceSansPro-LightIt.otf');
+}
 .container {
 	background-color: #FFFFFF;
 	width: 90%;
