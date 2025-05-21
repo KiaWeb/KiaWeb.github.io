@@ -15,7 +15,9 @@
   },
   {
     "number": "003",
-    "name": "NO CHANNEL",
-    "url": null
+    "name": "SYRI TV",
+	"desc": "Syri TV",
+	"time": "Continuous (24/7)",
+	"url":"online/kia/kplayer2.html?get=https://stream.syritv.al/SyriTV/index.m3u8"
   }
 ]
