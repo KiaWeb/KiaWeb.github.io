@@ -76,7 +76,11 @@ body {
 .channelinfotext {
 	margin-right: 20px;
 	text-align: right;
+	white-space: pre-wrap;
+	font-size: 2em;
+	line-height: 1.4em;
 }
+
 
 
 #program-name,
