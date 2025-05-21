@@ -24,17 +24,20 @@
   </style>
 </head>
 <body>
- <video>
-  id="video"
-  autoplay
-  controls
-  disablePictureInPicture
-  oncontextmenu="return false"
-  ondblclick="return false"
-</video>
 
+<video id="video" autoplay disablePictureInPicture oncontextmenu="return false" ondblclick="return false" playsinline></video>
 
   <script>
+  // <video>
+  //id="video"
+  //autoplay
+  //controls
+  //controlsList="nofullscreen nodownload noremoteplayback noplaybackrate"
+  //disablePictureInPicture
+  //oncontextmenu="return false"
+  //ondblclick="return false"
+  //style="pointer-events: auto;"
+//</video>
     async function initPlayer() {
       const video = document.getElementById('video');
       const player = new shaka.Player(video);
