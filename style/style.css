@@ -130,11 +130,13 @@ body {
 
 .EPGtext,
 .contentEPGtext {
-	margin: 0;
-	color: white;
-	font-size: 14pt;
-	text-align: center;
+  margin: 0;
+  color: white;
+  font-size: 14pt;
+  text-align: center;
+  width: 100%;
 }
+
 
 .EPGtext.active,
 .contentEPGtext.active {
