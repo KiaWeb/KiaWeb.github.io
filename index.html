@@ -52,8 +52,6 @@
   document.getElementById("IPTV").src = channelInfo.url;
   document.getElementById("program-name").textContent = capitalizeAllLetters(channelInfo.desc);
   document.getElementById("program-time").textContent = channelInfo.time;
-  fitTextToBox(document.getElementById("program-name"));
-  fitTextToBox(document.getElementById("program-time"));
 }
 
 
@@ -122,7 +120,10 @@
   }
 })();
 </script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/textfit/2.4.0/textFit.min.js"></script>
+<script>
+textFit(document.querySelector(".channelinfotext"));
+</script>
 
 </body>
 </html>
