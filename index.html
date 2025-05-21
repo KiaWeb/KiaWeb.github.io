@@ -13,24 +13,46 @@
 		<div class="channel">
 				<iframe id="IPTV" src="" width="460" height="259" allowfullscreen frameborder='0' style="width: 100%; height: 100%;"></iframe>
 			<script>
+			  let channelsData = [];
+
+			  fetch('channels.json')
+				.then(response => response.json())
+				.then(data => {
+				  channelsData = data; // Store globally
+				})
+				.catch(error => {
+				  console.error('Failed to load channels:', error);
+				});
+			</script>
+	
+			<script>
 			  function capitalizeAllLetters(str) {
 			        return str.toUpperCase();
 			  }
-                          function changeChannel(newChannel,url,description) {
-						  console.log(newChannel)
-				var date = new Date();
-				var day = date.getDay();
-				var alreadyActive = document.querySelectorAll(".active");
-				[].forEach.call(alreadyActive, function(el) {
-				    el.classList.remove("active");
-				});
-				newChannel.classList.add("active");
-				for (const child of newChannel.children) {
-				  child.classList.add("active");
-				}
-				document.getElementById("IPTV").src = url;
-				document.getElementById("program-name").textContent = capitalizeAllLetters(description);
+                          function changeChannel(newChannel, number) {
+  // Remove active classes
+  document.querySelectorAll(".active").forEach(el => el.classList.remove("active"));
+
+  // Highlight new active channel
+  newChannel.classList.add("active");
+  for (const child of newChannel.children) {
+    child.classList.add("active");
+  }
+
+  // Look up channel info
+  const channelInfo = channelsData.find(c => c.number === number);
+  if (!channelInfo) {
+    console.warn(`Channel ${number} not found in JSON.`);
+    return;
+  }
+
+  // Set channel
+  document.getElementById("IPTV").src = channelInfo.url;
+  document.getElementById("program-name").textContent = capitalizeAllLetters(channelInfo.name);
+}
+
 			  }
+
 			</script>
 		</div>
 	<img src="style/digiplex.png" alt="DIGIPLEX" height="20px" class="framelogo"> 
@@ -50,7 +72,7 @@
 <div class="EPG" scrolling="yes">
 <div class="EPGcontent">
   <div class="EPGrow">
-    <button onclick="changeChannel(this,'online/kia/kplayer2.html?get=https://tv.nknews.org/tvdash/stream.mpd','Korea Central TV')" class="channelEPG">
+    <button onclick="changeChannel(this,'001')" class="channelEPG">
       <p class="EPGtext">001 KCTV</p>
     </button>
     <button class="channelEPGA">
@@ -59,7 +81,7 @@
   </div>
 
   <div class="EPGrow">
-    <button onclick="changeChannel(this,'online/kia/kplayer2.html?get=https://d10rltuy0iweup.cloudfront.net/ATNNEWS/myStream/playlist.m3u8','ATN News')" class="channelEPG">
+    <button onclick="changeChannel(this,'002')" class="channelEPG">
       <p class="EPGtext">002 ATN NEWS</p>
     </button>
     <button class="channelEPGA">
