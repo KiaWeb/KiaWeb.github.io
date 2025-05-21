@@ -41,7 +41,7 @@
     const streamName = document.getElementById('streamName');
 
     // Replace this with your own .m3u8 URL
-    const videoSrc = new URLSearchParams(document.location.search).get("get");
+    const videoSrc = 'https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8';
 
     if (Hls.isSupported()) {
       const hls = new Hls();
