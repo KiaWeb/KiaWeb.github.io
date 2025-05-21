@@ -99,7 +99,6 @@ body {
 }
 #program-time::-webkit-scrollbar-thumb {
   background: transparent;
-  border-radius: 4px; /* optional for a soft edge */
 }
 
 #program-time::-webkit-scrollbar-thumb:hover {
