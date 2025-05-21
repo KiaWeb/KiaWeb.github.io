@@ -99,7 +99,7 @@ body {
   display: none;
 }
 
-#program-time:-webkit-slider-thumb{
+#program-time::-webkit-slider-thumb{
     box-shadow: 0px 0px 0px #000000;
     border-radius: 50%;
     border: 3px solid #0ac2ac;
