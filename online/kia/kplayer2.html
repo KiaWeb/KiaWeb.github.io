@@ -14,7 +14,7 @@
       align-items: center;
     }
     video {
-      width: 80%;
+      width: 100%;
       max-width: 960px;
       border: 2px solid #444;
       border-radius: 8px;
@@ -23,7 +23,7 @@
   </style>
 </head>
 <body>
-  <video id="video" controls autoplay></video>
+  <video id="video" controls autoplay controlsList="nofullscreen"></video>
 
   <script>
     async function initPlayer() {
@@ -37,7 +37,7 @@
 
       // Load your stream
       try {
-        await player.load('https://d10rltuy0iweup.cloudfront.net/ATNNEWS/myStream/playlist.m3u8'); // Replace this URL
+        await player.load(new URLSearchParams(document.location.search).get("get")); // Replace this URL
         console.log('M3U8 loaded!');
       } catch (err) {
         console.error('Error loading video:', err);
