@@ -87,7 +87,6 @@ body {
   align-items: center;
   justify-content: flex-end;
   overflow: hidden;
-  white-space: nowrap;
   padding: 0 8px;
   text-align: right;
   box-sizing: border-box;
@@ -103,6 +102,7 @@ body {
 .channelinfo.time {
 	margin-top: 155px;
 	height: 105px;
+	font-size: clamp(1rem, 2vw, 2rem);
 }
 
 .EPG {
