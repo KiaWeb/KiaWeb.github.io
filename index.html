@@ -26,7 +26,7 @@
 			</script>
 	
 			<script>
-			  function fitTextToBox(el, minSize = 8, maxSize = 20) {
+			  function fitTextToBox(el, minSize = 8, maxSize = 24) {
   let size = maxSize;
   el.style.fontSize = size + "px";
 
@@ -63,10 +63,9 @@
   // Set channel
   document.getElementById("IPTV").src = channelInfo.url;
   document.getElementById("program-name").textContent = capitalizeAllLetters(channelInfo.desc);
-
-document.getElementById("program-time").textContent = channelInfo.time;
-const timeEl = document.getElementById("program-time");
-fitTextToBox(timeEl);
+  document.getElementById("program-time").textContent = channelInfo.time;
+  fitTextToBox(document.getElementById("program-name"));
+  fitTextToBox(document.getElementById("program-time"));
 }
 
 
