@@ -199,3 +199,25 @@ body {
 .EPGcontent::-webkit-scrollbar { 
     display: none;  /* Safari and Chrome */
 }
+
+.EPGrow {
+  display: flex;
+  justify-content: space-between;
+  margin: 6px 16px;
+}
+
+.channelEPG,
+.channelEPGA {
+  /*width: 48%;
+  height: 46px;
+  background: #2a4b8e;
+  border-radius: 12px;
+  border: 0;
+  color: white;
+  font-size: 14pt;
+  text-align: center;*/
+}
+.channelEPGA.active, .channelEPG.active {
+  background: #ffc75c;
+  color: black;
+}
