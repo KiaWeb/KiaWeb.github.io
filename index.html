@@ -26,16 +26,19 @@
 			</script>
 	
 			<script>
-			  function fitTextToBox(element, maxFontSize = 18, minFontSize = 8) {
-  const parent = element.parentElement;
-  let fontSize = maxFontSize;
-  element.style.fontSize = fontSize + "px";
+			  function fitTextToBox(el, minSize = 8, maxSize = 20) {
+  let size = maxSize;
+  el.style.fontSize = size + "px";
 
-  while (fontSize > minFontSize && element.scrollWidth > parent.clientWidth) {
-    fontSize--;
-    element.style.fontSize = fontSize + "px";
+  while (
+    (el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight) &&
+    size > minSize
+  ) {
+    size--;
+    el.style.fontSize = size + "px";
   }
 }
+
 
 			  function capitalizeAllLetters(str) {
 			        return str.toUpperCase();
@@ -60,10 +63,10 @@
   // Set channel
   document.getElementById("IPTV").src = channelInfo.url;
   document.getElementById("program-name").textContent = capitalizeAllLetters(channelInfo.desc);
-fitTextToBox(document.getElementById("program-name"));
 
 document.getElementById("program-time").textContent = channelInfo.time;
-fitTextToBox(document.getElementById("program-time"));
+const timeEl = document.getElementById("program-time");
+fitTextToBox(timeEl);
 }
 
 
