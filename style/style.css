@@ -59,7 +59,9 @@ body {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  box-sizing: border-box;
+}
+
 }
 
 
@@ -91,8 +93,13 @@ body {
   padding: 0 8px;
   text-align: right;
   box-sizing: border-box;
+  word-break: break-word;
+  white-space: normal; /* allow wrapping */
+  overflow: hidden;
+  text-align: right;
+  padding: 4px 8px;
+  font-size: 14px;
 }
-
 
 
 .channelinfo.name {
