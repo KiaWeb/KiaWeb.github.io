@@ -1,14 +1,34 @@
-<iframe  src="https://cdn.theoplayer.com/demos/iframe/theoplayer.html?autoplay=false&muted=false&preload=none&src=//amchls.wns.live/hls/stream.m3u8"
-  title="Embedded THEOplayer"
-  frameborder="0"
-  allow="accelerometer; autoplay; encrypted-media; fullscreen; gyroscope; picture-in-picture"
-  allowfullscreen
-  style="
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    overflow: hidden;
-    border: none;
-    scrollbar-width: none; /* for Firefox */
-  "
-  scrolling="no">
-</iframe>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Clappr M3U8 Player</title>
+  <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #player {
+      width: 80%;
+      max-width: 800px;
+      height: 450px;
+    }
+  </style>
+</head>
+<body>
+  <div id="player"></div>
+  <script>
+    const player = new Clappr.Player({
+      source: "https://corsproxy.io/?url=https://amchls.wns.live/hls/stream.m3u8", // Change this
+      parentId: "#player",
+      autoPlay: true,
+      mute: false,
+    });
+  </script>
+</body>
+</html>
