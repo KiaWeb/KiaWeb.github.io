@@ -56,6 +56,7 @@ body {
   align-items: center;
   justify-content: flex-end;
   overflow: hidden;
+  padding: 0 15px;
 }
 
 
@@ -109,6 +110,9 @@ body {
     cursor: grabbing;
     height: 15px;
     width: 15px;
+}
+pre {
+	font-family: "Verdana";
 }
 
 .channelinfo.name {
