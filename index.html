@@ -26,6 +26,17 @@
 			</script>
 	
 			<script>
+			  function fitTextToBox(element, maxFontSize = 18, minFontSize = 8) {
+  const parent = element.parentElement;
+  let fontSize = maxFontSize;
+  element.style.fontSize = fontSize + "px";
+
+  while (fontSize > minFontSize && element.scrollWidth > parent.clientWidth) {
+    fontSize--;
+    element.style.fontSize = fontSize + "px";
+  }
+}
+
 			  function capitalizeAllLetters(str) {
 			        return str.toUpperCase();
 			  }
@@ -49,7 +60,10 @@
   // Set channel
   document.getElementById("IPTV").src = channelInfo.url;
   document.getElementById("program-name").textContent = capitalizeAllLetters(channelInfo.desc);
-  document.getElementById("program-time").textContent = channelInfo.time;
+fitTextToBox(document.getElementById("program-name"));
+
+document.getElementById("program-time").textContent = channelInfo.time;
+fitTextToBox(document.getElementById("program-time"));
 }
 
 
