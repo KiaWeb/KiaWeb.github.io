@@ -120,27 +120,6 @@
   }
 })();
 </script>
-<script>
-  function fitTextToDiv(div) {
-    const style = window.getComputedStyle(div);
-    const width = parseFloat(style.width);
-    const height = parseFloat(style.height);
-    let fontSize = 10;
-    div.style.fontSize = fontSize + "px";
-
-    while (div.scrollWidth <= width && div.scrollHeight <= height) {
-      fontSize++;
-      div.style.fontSize = fontSize + "px";
-    }
-
-    // Back off by one to avoid overflow
-    div.style.fontSize = (fontSize - 1) + "px";
-  }
-
-  const myDiv = document.querySelector(".channelinfotext");
-  fitTextToDiv(myDiv);
-  window.addEventListener("resize", () => fitTextToDiv(myDiv));
-</script>
 
 </body>
 </html>
