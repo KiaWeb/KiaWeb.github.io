@@ -32,7 +32,7 @@
 			        return str.toUpperCase();
 			  }
                           function changeChannel(newChannel, number) {
-  const currentlyActive = document.querySelector(".active");
+  const currentlyActive = document.querySelector(".channel.active");
   const isSameChannel = currentlyActive === newChannel;
 
   // If clicking the same channel and it's active, turn it off
@@ -49,12 +49,13 @@
   }
 
   // Remove active classes
-  document.querySelectorAll(".channel.active").forEach(el => {
-    el.classList.remove("active");
-    for (const child of el.children) {
-      child.classList.remove("active");
-    }
-  });
+  document.querySelectorAll(".channel").forEach(channel => {
+  channel.classList.remove("active");
+  for (const child of channel.children) {
+    child.classList.remove("active");
+  }
+});
+
 
   // Highlight new active channel
   newChannel.classList.add("active");
