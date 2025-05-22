@@ -32,9 +32,10 @@
 			        return str.toUpperCase();
 			  }
               function changeChannel(newChannel, number) {
+  // Only select the currently active channel buttons
   const currentlyActive = document.querySelector(".channel.active");
 
-  // If the clicked button is already active, turn it off
+  // If same channel is clicked again, turn it off
   if (currentlyActive === newChannel) {
     newChannel.classList.remove("active");
     for (const child of newChannel.children) {
@@ -47,7 +48,7 @@
     return;
   }
 
-  // Otherwise, turn off all other channels
+  // Remove active class from ALL channels and their children
   document.querySelectorAll(".channel").forEach(channel => {
     channel.classList.remove("active");
     for (const child of channel.children) {
@@ -55,13 +56,13 @@
     }
   });
 
-  // Activate the newly clicked channel
+  // Activate the clicked channel
   newChannel.classList.add("active");
   for (const child of newChannel.children) {
     child.classList.add("active");
   }
 
-  // Load the channel info
+  // Set channel info
   const channelInfo = channelsData.find(c => c.number === number);
   if (!channelInfo) {
     console.warn(`Channel ${number} not found in JSON.`);
@@ -72,6 +73,7 @@
   document.getElementById("program-name").textContent = capitalizeAllLetters(channelInfo.desc);
   document.getElementById("program-time").textContent = channelInfo.time;
 }
+
 
 
 
