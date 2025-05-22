@@ -33,7 +33,7 @@
 			  }
               function changeChannel(newChannel, number) {
   // Only select the currently active channel buttons
-  const currentlyActive = document.querySelector(".channel.active");
+  const currentlyActive = document.querySelector(".channelEPG.active");
 
   // If same channel is clicked again, turn it off
   if (currentlyActive === newChannel) {
@@ -49,7 +49,7 @@
   }
 
   // Remove active class from ALL channels and their children
-  document.querySelectorAll(".channel").forEach(channel => {
+  document.querySelectorAll(".channelEPG").forEach(channel => {
     channel.classList.remove("active");
     for (const child of channel.children) {
       child.classList.remove("active");
