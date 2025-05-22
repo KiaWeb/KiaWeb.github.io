@@ -30,49 +30,29 @@
 
 			  function capitalizeAllLetters(str) {
 			        return str.toUpperCase();
-			  }			  let activeChannel = null;
+			  }
+                          function changeChannel(newChannel, number) {
+  // Remove active classes
+  document.querySelectorAll(".active").forEach(el => el.classList.remove("active"));
 
-function changeChannel(newChannel, number) {
-  const isSameChannel = activeChannel === newChannel;
+  // Highlight new active channel
+  newChannel.classList.toggle("active");
+  for (const child of newChannel.children) {
+    child.classList.toggle("active");
+  }
 
-  // Turn OFF if same button clicked again
-  if (isSameChannel) {
-    newChannel.classList.remove("active");
-    for (const child of newChannel.children) {
-      child.classList.remove("active");
-    }
-
-    document.getElementById("IPTV").src = "http://kiascdn.org/nosignal.html";
-    document.getElementById("program-name").textContent = "NO CHANNEL SELECTED";
-    document.getElementById("program-time").textContent = "NO CHANNEL SELECTED";
-
-    activeChannel = null;
-    console.log("Channel OFF");
+  // Look up channel info
+  const channelInfo = channelsData.find(c => c.number === number);
+  if (!channelInfo) {
+    console.warn(`Channel ${number} not found in JSON.`);
     return;
   }
 
-  // Turn OFF previously active channel
-  if (activeChannel) {
-    activeChannel.classList.remove("active");
-    for (const child of activeChannel.children) {
-      child.classList.remove("active");
-    }
-  }
-
-  // Turn ON new channel
-  newChannel.classList.add("active");
-  for (const child of newChannel.children) {
-    child.classList.add("active");
-  }
-
-  const channelInfo = channelsData.find(c => c.number === number);
-  if (!chan
-
-
-  // Remove active classes
-
-  // Highlight new active channel
- 
+  // Set channel
+  document.getElementById("IPTV").src = channelInfo.url;
+  document.getElementById("program-name").textContent = capitalizeAllLetters(channelInfo.desc);
+  document.getElementById("program-time").textContent = channelInfo.time;
+}
 
 
 			</script>
