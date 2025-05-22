@@ -30,34 +30,41 @@
 
 			  function capitalizeAllLetters(str) {
 			        return str.toUpperCase();
-			  }			  let isOn = false;
-                          function changeChannel(newChannel, number) {
-						  isOn = !isOn;
-						  if (isOn) {
-						  newChannel.classList.add("active");
-						  for (const child of newChannel.children) {
-							child.classList.add("active");
-						  }
+			  }			  function changeChannel(newChannel, number) {
+  // Get the toggle state from the element itself
+  const isOn = newChannel.getAttribute("data-active") === "true";
 
-						  // Look up channel info
-						  const channelInfo = channelsData.find(c => c.number === number);
-						  if (!channelInfo) {
-							console.warn(`Channel ${number} not found in JSON.`);
-							return;
-						  }
+  if (!isOn) {
+    // Turn ON
+    newChannel.setAttribute("data-active", "true");
+    newChannel.classList.add("active");
 
-						  // Set channel
-						  document.getElementById("IPTV").src = channelInfo.url;
-						  document.getElementById("program-name").textContent = capitalizeAllLetters(channelInfo.desc);
-						  document.getElementById("program-time").textContent = channelInfo.time;
+    for (const child of newChannel.children) {
+      child.classList.add("active");
+    }
+
+    const channelInfo = channelsData.find(c => c.number === number);
+    if (!channelInfo) {
+      console.warn(`Channel ${number} not found in JSON.`);
+      return;
+    }
+
+    document.getElementById("IPTV").src = channelInfo.url;
+    document.getElementById("program-name").textContent = capitalizeAllLetters(channelInfo.desc);
+    document.getElementById("program-time").textContent = channelInfo.time;
+
+  } else {
+    // Turn OFF
+    newChannel.setAttribute("data-active", "false");
+
+    document.querySelectorAll(".active").forEach(el => el.classList.remove("active"));
+    document.getElementById("IPTV").src = "http://kiascdn.org/nosignal.html";
+    document.getElementById("program-name").textContent = "NO CHANNEL SELECTED";
+    document.getElementById("program-time").textContent = "NO CHANNEL SELECTED";
+    console.log("The button is OFF");
+  }
 }
-						  } else {
-							document.querySelectorAll(".active").forEach(el => el.classList.remove("active"));
-							document.getElementById("IPTV").src = "http://kiascdn.org/nosignal.html";
-							document.getElementById("program-name").textContent = "NO CHANNEL SELECTED";
-							document.getElementById("program-time").textContent = "NO CHANNEL SELECTED";
-							console.log("The button is OFF");
-						  }
+
   // Remove active classes
 
   // Highlight new active channel
