@@ -55,6 +55,13 @@
       child.classList.remove("active");
     }
   });
+  
+  document.querySelectorAll(".channelEPGA").forEach(channel => {
+    channel.classList.remove("active");
+    for (const child of channel.children) {
+      child.classList.remove("active");
+    }
+  });
 
   // Activate the clicked channel
   newChannel.classList.add("active");
