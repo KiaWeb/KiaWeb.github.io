@@ -32,13 +32,34 @@
 			        return str.toUpperCase();
 			  }
                           function changeChannel(newChannel, number) {
+  const currentlyActive = document.querySelector(".active");
+  const isSameChannel = currentlyActive === newChannel;
+
+  // If clicking the same channel and it's active, turn it off
+  if (isSameChannel) {
+    newChannel.classList.remove("active");
+    for (const child of newChannel.children) {
+      child.classList.remove("active");
+    }
+
+    document.getElementById("IPTV").src = "nosignal.html";
+    document.getElementById("program-name").textContent = "NO CHANNEL SELECTED";
+    document.getElementById("program-time").textContent = "NO CHANNEL SELECTED";
+    return;
+  }
+
   // Remove active classes
-  document.querySelectorAll(".active").forEach(el => el.classList.remove("active"));
+  document.querySelectorAll(".channel.active").forEach(el => {
+    el.classList.remove("active");
+    for (const child of el.children) {
+      child.classList.remove("active");
+    }
+  });
 
   // Highlight new active channel
-  newChannel.classList.toggle("active");
+  newChannel.classList.add("active");
   for (const child of newChannel.children) {
-    child.classList.toggle("active");
+    child.classList.add("active");
   }
 
   // Look up channel info
