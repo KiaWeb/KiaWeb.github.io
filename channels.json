@@ -33,5 +33,12 @@
 	"desc": "ABN",
 	"time": "Unknown Schedule",
 	"url": "online/kia/kplayer2.html?get=https://vod2.abn.co.kr/IPHONE/abn.m3u8"
+  },
+  {
+    "number": "006",
+    "name": "IRAN INTERNATIONAL",
+	"desc": "Iran International",
+	"time": "24/7",
+	"url": "online/kia/kplayer2.html?get=https://live.livetvstream.co.uk/LS-63503-4/index.m3u8"
   }
 ]
