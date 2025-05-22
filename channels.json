@@ -26,5 +26,12 @@
 	"desc": "AL24 News",
 	"time": "Continuous (24/7)",
 	"url": "online/kia/kplayer2.html?get=https://cdn.live.easybroadcast.io/abr_corp/66_al24_u4yga6h/playlist.m3u8"
+  },
+  {
+    "number": "005",
+    "name": "ABN",
+	"desc": "ABN",
+	"time": "Unknown Schedule",
+	"url": "online/kia/kplayer2.html?get=https://vod2.abn.co.kr/IPHONE/abn.m3u8"
   }
 ]
