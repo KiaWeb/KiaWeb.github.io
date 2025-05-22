@@ -31,11 +31,12 @@
 			  function capitalizeAllLetters(str) {
 			        return str.toUpperCase();
 			  }
-                          function changeChannel(newChannel, number) {
-  const currentlyActive = document.querySelector(".active");
+              function changeChannel(newChannel, number) {
+  // Find the currently active channel only
+  const currentlyActive = document.querySelector(".channel.active");
   const isSameChannel = currentlyActive === newChannel;
 
-  // If clicking the same channel and it's active, turn it off
+  // If clicking the same active channel, turn it off
   if (isSameChannel) {
     newChannel.classList.remove("active");
     for (const child of newChannel.children) {
@@ -48,16 +49,15 @@
     return;
   }
 
-  // Remove active classes
+  // Remove all active classes from other channels
   document.querySelectorAll(".channel").forEach(channel => {
-  channel.classList.remove("active");
-  for (const child of channel.children) {
-    child.classList.remove("active");
-  }
-});
+    channel.classList.remove("active");
+    for (const child of channel.children) {
+      child.classList.remove("active");
+    }
+  });
 
-
-  // Highlight new active channel
+  // Add active class to the new channel and its children
   newChannel.classList.add("active");
   for (const child of newChannel.children) {
     child.classList.add("active");
@@ -70,11 +70,12 @@
     return;
   }
 
-  // Set channel
+  // Set channel info
   document.getElementById("IPTV").src = channelInfo.url;
   document.getElementById("program-name").textContent = capitalizeAllLetters(channelInfo.desc);
   document.getElementById("program-time").textContent = channelInfo.time;
 }
+
 
 
 			</script>
