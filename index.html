@@ -9,6 +9,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
+<div class="tutorialframe">
+	<h1 id="tutorialinfo">Don't know how to<br> use Kia's IPTV?</h1>
+	<button id="opentutorial" onclick="startTutorial(this)">Open tutorial</button>
+</div>
+<img id="mouseclick" width="100" height="97" src="tutorial/mouseclick.gif" style="z-index:10;"/>
+<img id="hand" src="tutorial/hand.png" style="z-index:10;"/>
+<p id="tchan">Click the channel button to toggle viewing of the channel!</h1>
+<p id="tchaninfo">Channel and schedule description here, try scrolling!</h1>
+<p id="tchantv">You can use the video controls too!</h1>
+<button id="nextctrl" onclick="endTutorial(this)">End tutorial</button>
 <div class="channelframe">
 		<div class="channel">
 				<iframe id="IPTV" src="nosignal.html" width="460" height="259" allowfullscreen frameborder='0' style="width: 100%; height: 100%;"></iframe>
@@ -24,8 +34,7 @@
 				  console.error('Failed to load channels:', error);
 				});
 			</script>
-	
-			<script>
+	<script>
 
 
 			  function capitalizeAllLetters(str) {
@@ -33,7 +42,7 @@
 			  }
               function changeChannel(newChannel, number) {
   // Only select the currently active channel buttons
-  const currentlyActive = document.querySelector(".channelEPG.active");
+  const currentlyActive = document.querySelector(".channelEPG.active, .channelEPGA.active, .channelEPGT.active");
 
   // If same channel is clicked again, turn it off
   if (currentlyActive === newChannel) {
@@ -62,6 +71,14 @@
       child.classList.remove("active");
     }
   });
+  
+  document.querySelectorAll(".channelEPGT").forEach(channel => {
+    channel.classList.remove("active");
+    for (const child of channel.children) {
+      child.classList.remove("active");
+    }
+  });
+
 
   // Activate the clicked channel
   newChannel.classList.add("active");
@@ -92,6 +109,7 @@
 
 <div class="channelinfoframe">
 	<h1 id="timeinfo"></h1>
+		<button id="stepthree" onclick="stepThree(this)" style="z-index:10;">Next</button>
 		<div class="channelinfo name">
 			<pre class="channelinfotext" id="program-name">NO CHANNEL SELECTED</pre>
 		</div>
@@ -107,7 +125,7 @@
     <button onclick="changeChannel(this,'001')" class="channelEPG">
       <p class="EPGtext">001 KCTV</p>
     </button>
-    <button onclick="changeChannel(this,'007')" class="channelEPGA">
+    <button onclick="changeChannel(this,'007')" class="channelEPGT">
       <p class="contentEPGtext">007 CBS SPORTS GOLAZO NETWORK</p>
     </button>
   </div>
@@ -185,6 +203,74 @@
     window.location.href = "incompatible.html";
   }
 })();
+</script>
+<script>
+const start = document.querySelector("#opentutorial");
+const startInf = document.querySelector("#tutorialinfo");
+const mouseclick = document.querySelector("#mouseclick");
+const hand = document.querySelector("#hand");
+const tchan = document.querySelector("#tchan");
+const tchaninfo = document.querySelector("#tchaninfo");
+const tchantv = document.querySelector("#tchantv");
+const nextctrl = document.querySelector("#nextctrl");
+const stepthree = document.querySelector("#stepthree");
+let isTutorial = false;
+
+function startTutorial(btn) {
+	if (isTutorial == false) {
+		isTutorial = true;
+		start.style.display = "none";
+		startInf.style.display = "none";
+		mouseclick.style.display = "block";
+		tchan.style.display = "block";
+	}
+}
+function stepTwo(btn) {
+	mouseclick.style.display = "none";
+	tchan.style.display = "none";
+	tchaninfo.style.display = "block";
+	hand.style.display = "block";
+	stepthree.style.display = "block";
+}
+function stepThree(btn) {
+	stepthree.style.display = "none";
+	tchaninfo.style.display = "none";
+	hand.style.display = "none";
+	tchantv.style.display = "block";
+	nextctrl.style.display = "block";
+}
+function endTutorial(btn) {
+	stepthree.style.display = "none";
+	tchantv.style.display = "none";
+	nextctrl.style.display = "none";
+	start.style.display = "block";
+	startInf.style.display = "block";
+	isTutorial = false;
+}
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const tutorialButtons = document.querySelectorAll(".channelEPG, .channelEPGA, .channelEPGT");
+  console.log("Tutorial found", tutorialButtons.length, "buttons");
+
+  tutorialButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      // Step One: Always runs on any tutorial button click
+      if (isTutorial == true) {
+	  stepTwo(this);
+
+      // Additional steps: Based on specific IDs
+      const id = this.id;
+
+      if (id === "stepthree") {
+        stepThree(this);
+      } else if (id === "nextctrl") {
+        endTutorial(this);
+      }
+	  }
+    });
+  });
+});
 </script>
 
 </body>

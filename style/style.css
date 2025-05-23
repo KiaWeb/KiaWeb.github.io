@@ -4,12 +4,116 @@ body {
 	background: radial-gradient(circle, rgba(22, 90, 120, 1) 0%, rgba(8, 181, 255, 1) 100%);
 	font-size: 10pt;
 }
-
+button {
+	font-family: "Verdana",Arial;
+}
 html,
 body {
 	height: 100%;
 	margin-bottom: 0px;
 	margin-top: 0px;
+}
+.tutorialframe {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+#tutorialinfo {
+	margin-left: 70px;
+	margin-top: 100px;
+}
+#opentutorial {
+	position: absolute;
+	top: 200px; /* Adjust to move it down */
+	right: 620px; /* Align with h1 */
+	font-size: 32px;       /* Match h1-like size */
+	padding: 12px 24px;     /* Some spacing inside the button */
+	border-radius: 8px;     /* Rounded corners */
+	background-color: #007bff; /* Blue background */
+	color: white;
+	border: none;
+	cursor: pointer;
+}
+
+#stepthree {
+	position: absolute;
+	top: 15px; /* Adjust to move it down */
+	right: 390px; /* Align with h1 */
+	font-size: 16px;       /* Match h1-like size */
+	padding: 12px 24px;     /* Some spacing inside the button */
+	border-radius: 8px;     /* Rounded corners */
+	background-color: #007bff; /* Blue background */
+	color: white;
+	border: none;
+	cursor: pointer;
+	display: none;
+}
+
+#mouseclick {
+	position: absolute;
+	top: 420px;
+	right: 100px;
+	display: none;
+}
+
+#tchan {
+	position: absolute;
+	z-index: 10;
+	top: 405px;
+	right: 100px;
+	font-weight: bold;
+	color: black;
+	display: none;
+}
+
+#tchaninfo {
+	position: absolute;
+	z-index: 10;
+	top: 85px;
+	right: 100px;
+	font-weight: bold;
+	color: black;
+	display: none;
+}
+
+#tchantv {
+	position: absolute;
+	z-index: 10;
+	top: 304px;
+	left: 150px;
+	font-weight: bold;
+	color: white;
+	display: none;
+}
+#nextctrl {
+	font-family: "Verdana",Arial;
+	font-weight: bold;
+	position: absolute;
+	top: 2px;
+	left: 280px;
+	border-radius: 8px;
+	background-color: #007bff;
+	color: white;
+	border: none;
+	cursor: pointer;
+	padding: 0 10px;
+	width: 120px;
+	display: none;
+}
+
+#hand {
+	position: absolute;
+	top: 120px;
+	right: 300px;
+	display: block;
+	width: 256px;
+	height: 256px;
+	display: none;
+}
+
+
+span {
+	font-family: "Verdana",Arial;
 }
 
 .channelframe {
@@ -21,7 +125,6 @@ body {
 	position: absolute;
 	left: 94px;
 }
-
 .channel {
 	width: 460px;
 	height: 259px;
@@ -186,8 +289,20 @@ pre {
 	justify-content: center;
 }
 
+.channelEPGT {
+	flex: 1;
+	height: 46px;
+	background: #2a4b8e;
+	border-radius: 12px;
+	border: 0px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
 .channelEPGA.active,
-.channelEPG.active {
+.channelEPG.active,
+.channelEPGT.active {
 	background: #ffc75c;
 	color: black;
 }

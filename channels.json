@@ -4,7 +4,7 @@
     "name": "KCTV",
 	"desc": "Korea Central TV",
 	"time": "(Pyongyang Time, UTC+9):\nMon–Fri: 3:00 PM – 10:30 PM\nSundays, 1st, 11th, 21st, and major holidays: 9:00 AM – 10:30 PM\nSpecial events: From 8:00 AM\n\nNews Bulletins:\n5:00 PM\n8:00 PM (main bulletin)\n10:30 PM",
-    "url": "online/kia/kplayer2.html?get=https://tv.nknews.org/tvdash/stream.mpd"
+    "url": "online/kia/kplayer3.html?get=https://tv.nknews.org/tvhls/stream.m3u8"
   },
   {
     "number": "002",
@@ -31,7 +31,7 @@
     "number": "005",
     "name": "ABN",
 	"desc": "ABN",
-	"time": "Unknown Schedule",
+	"time": "Continuous (24/7)",
 	"url": "online/kia/kplayer2.html?get=https://vod2.abn.co.kr/IPHONE/abn.m3u8"
   },
   {
