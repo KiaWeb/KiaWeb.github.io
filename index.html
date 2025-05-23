@@ -293,6 +293,24 @@ function scaleToFitBaseWidth() {
 <!--IMPORTANT-->
 </div>
 <script>
+function updateScaleForMobile() {
+	const baseWidth = 1920;
+	const screenWidth = window.innerWidth;
+
+	// Only apply if screen is smaller than base
+	const scale = Math.min(screenWidth / baseWidth, 1);
+
+	document.body.style.transform = `scale(${scale})`;
+	document.body.style.transformOrigin = "top left";
+	document.body.style.width = baseWidth + "px";
+	document.body.style.overflowX = "hidden";
+	document.documentElement.style.overflowX = "hidden";
+}
+
+window.addEventListener("load", updateScaleForMobile);
+window.addEventListener("resize", updateScaleForMobile);
+</script>
+
 
 </script>
 </body>
