@@ -9,11 +9,18 @@ body {
 button {
 	font-family: "Verdana",Arial;
 }
-html,
-body {
-	height: 100%;
-	margin-bottom: 0px;
-	margin-top: 0px;
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+#wrapper {
+  transform-origin: top left;
+  width: 1920px;
+  height: 1080px; /* or auto, depending on your design */
 }
 .tutorialframe {
 	display: flex;

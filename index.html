@@ -6,7 +6,7 @@
 <link rel="icon" type="image/x-icon" href="style/favicon.ico">
 <link rel="stylesheet" title="Default" href="style/style.css" type="text/css" media="screen">
 <meta property="og:image" content="https://kiaweb.github.io/digiplexroku.png" />
-<meta name="viewport" content="width=1920, initial-scale=0.5, maximum-scale=0.5, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
 </head>
 <body>
@@ -275,20 +275,22 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 <script>
-function scaleToFitBaseWidth() {
+function scaleToFit() {
+  const baseWidth = 1920;
+  const baseHeight = 1080;
 
-	const screenWidth = window.innerWidth;
-	const baseWidth = screenWidth > 1600 ? 1920 : 1280; // adjust threshold as needed
-	const scale = screenWidth / baseWidth;
-	const body = document.body;
+  const scaleX = window.innerWidth / baseWidth;
+  const scaleY = window.innerHeight / baseHeight;
+  const scale = Math.min(scaleX, scaleY); // maintain aspect ratio
 
-	body.style.transformOrigin = "top left";
-	body.style.transform = `scale(${scale})`;
-	body.style.width = baseWidth + "px";
-	body.style.overflowX = "hidden";
+  const wrapper = document.getElementById("scale-wrapper");
+  wrapper.style.transform = `scale(${scale})`;
 }
 
+window.addEventListener("load", scaleToFit);
+window.addEventListener("resize", scaleToFit);
 </script>
+
 
 <!--IMPORTANT-->
 </div>
