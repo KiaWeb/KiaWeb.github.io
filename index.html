@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Flash Video Player</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      background-color: #000;
+    }
+    object, embed {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <object
+    data="NewVideoPlayer.swf"
+    type="application/x-shockwave-flash"
+    width="100%"
+    height="100%">
+    
+    <param name="movie" value="NewVideoPlayer.swf" />
+    <param name="allowFullScreen" value="true" />
+    <param name="allowScriptAccess" value="always" />
+    <param name="wmode" value="direct" />
+    
+    <!-- 🔽 FlashVar with working MP4 URL -->
+    <param name="FlashVars" value="videoPath=http://lightspeed.kiascdn.org/csytp.mp4" />
+    
+    <p>This content requires Adobe Flash Player. Please enable it or use the Ruffle Emulator.</p>
+  </object>
+</body>
+</html>
