@@ -31,18 +31,20 @@
       flex-grow: 1;
     }
 
-    object, embed {
+    .flash-player {
       width: 80%;
       height: 80%;
     }
   </style>
+  <!-- Ruffle Emulator -->
+  <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 </head>
 <body>
 
   <p id="videoTitle">Loading video...</p>
 
   <div class="player-container" id="playerContainer">
-    <!-- Flash object will be injected here by JavaScript -->
+    <!-- Flash or Ruffle will be injected here -->
   </div>
 
   <script>
@@ -68,26 +70,42 @@
         // Update the <p> tag
         document.getElementById("videoTitle").textContent = "Video name: " + videoName;
 
-        // Create the Flash object with dynamic FlashVars
-        const flashObject = document.createElement("object");
-        flashObject.setAttribute("data", "NewVideoPlayer.swf");
-        flashObject.setAttribute("type", "application/x-shockwave-flash");
-        flashObject.setAttribute("width", "80%");
-        flashObject.setAttribute("height", "80%");
+        // Check for Flash support (almost always false now)
+        const hasFlash = false; // Legacy check removed; Ruffle takes over
 
-        flashObject.innerHTML = `
-          <param name="movie" value="NewVideoPlayer.swf" />
-          <param name="allowFullScreen" value="true" />
-          <param name="allowScriptAccess" value="always" />
-          <param name="wmode" value="direct" />
-          <param name="FlashVars" value="videoPath=${encodeURIComponent(videoLink)}" />
-          <a href="https://github.com/radubirsan/FlashBrowser/releases/">
-            <img src="get_flash_player.gif" alt="Get Adobe Flash Player">
-          </a>
-        `;
+        if (hasFlash) {
+          // Old Flash method (for ancient browsers)
+          const flashObject = document.createElement("object");
+          flashObject.setAttribute("data", "NewVideoPlayer.swf");
+          flashObject.setAttribute("type", "application/x-shockwave-flash");
+          flashObject.setAttribute("width", "80%");
+          flashObject.setAttribute("height", "80%");
 
-        // Add to container
-        document.getElementById("playerContainer").appendChild(flashObject);
+          flashObject.innerHTML = `
+            <param name="movie" value="NewVideoPlayer.swf" />
+            <param name="allowFullScreen" value="true" />
+            <param name="allowScriptAccess" value="always" />
+            <param name="wmode" value="direct" />
+            <param name="FlashVars" value="videoPath=${encodeURIComponent(videoLink)}" />
+          `;
+
+          document.getElementById("playerContainer").appendChild(flashObject);
+        } else {
+          // Use Ruffle
+          const ruffle = window.RufflePlayer.newest();
+          const player = ruffle.createPlayer();
+          player.classList.add("flash-player");
+
+          document.getElementById("playerContainer").appendChild(player);
+
+          // Load the SWF and pass FlashVars
+          player.load({
+            url: "NewVideoPlayer.swf",
+            parameters: {
+              videoPath: videoLink
+            }
+          });
+        }
       })
       .catch(error => {
         document.getElementById("videoTitle").textContent = "Error loading video list.";
