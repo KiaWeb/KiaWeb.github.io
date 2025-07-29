@@ -71,7 +71,7 @@
         document.getElementById("videoTitle").textContent = "Video name: " + videoName;
 
         // Check for Flash support (almost always false now)
-var _hasFlash = ((typeof navigator.plugins !== "undefined" && typeof navigator.plugins["Shockwave Flash"] === "object") || (window.ActiveXObject && (new ActiveXObject("ShockwaveFlash.ShockwaveFlash")) !== false));
+var hasFlash = ((typeof navigator.plugins !== "undefined" && typeof navigator.plugins["Shockwave Flash"] === "object") || (window.ActiveXObject && (new ActiveXObject("ShockwaveFlash.ShockwaveFlash")) !== false));
    
         if (hasFlash) {
           // Old Flash method (for ancient browsers)
