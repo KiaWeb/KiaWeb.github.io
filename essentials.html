@@ -154,9 +154,9 @@ Prism.hooks.add('after-tokenize', function(env) {
 
     <section id="api">
         <h2>API Reference</h2>
-		<h3><code>Essentials:EnableAV()</code></h3>
+		<h3><code>Essentials:EnableAE()</code></h3>
 		<ul>
-            <li><strong>Description</strong> - Enables antivirus module (Cannot be disabled unless the function is never called)</li>
+            <li><strong>Description</strong> - Enables AntiExploit module (Cannot be disabled unless the function is never called)</li>
         </ul>
 		<h3><code>Essentials:GetVersion()</code></h3>
 		<ul>
@@ -180,7 +180,7 @@ Prism.hooks.add('after-tokenize', function(env) {
         </ul>
 		<h3><code>Essentials:WhitelistPlayers(players)</code></h3>
         <ul>
-            <li><strong>Description</strong> (table) - Table with all Player instances, whitelists them from the antivirus</li>
+            <li><strong>Description</strong> (table) - Table with all Player instances, whitelists them from the AntiExploit module</li>
         </ul>
         <h3><code>Essentials:BananaDance(imageLabel)</code> <span style="color:red;">[DEPRECATED]</span></h3>
 		<ul>
@@ -204,7 +204,7 @@ Essentials:Notify({
     Duration = 5
 })
 print(Essentials:GetVersion())
-Essentials:EnableAV()
+Essentials:EnableAE()
 Essentials:WhitelistPlayers({game.Players:GetPlayerFromCharacter("myUsernameOrWhatever")})
 -- Spritesheet animation
 local myImageLabel = game.StarterGui.MyImageLabel
