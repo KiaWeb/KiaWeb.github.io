@@ -197,7 +197,7 @@ Prism.hooks.add('after-tokenize', function(env) {
 		<ul>
             <li><strong>Description</strong> - Returns a (string) value containing the version of the Dev Essentials</li>
         </ul>
-        <h3><code>Essentials:Notify(data)</code></h3>
+        <h3><code>Essentials:Notify(data,player)</code></h3>
         <ul>
             <li><strong>Title</strong> (string) - Notification title</li>
             <li><strong>Text</strong> (string) - Notification message</li>
@@ -237,7 +237,7 @@ Essentials:Notify({
     Text = "Thanks for playing!",
     Image = "rbxassetid://123456789",
     Duration = 5
-})
+},game.Players:GetPlayerFromCharacter("myUsernameOrWhatever"))
 print(Essentials:GetVersion())
 Essentials:EnableAE()
 Essentials:WhitelistPlayers({game.Players:GetPlayerFromCharacter("myUsernameOrWhatever")})
