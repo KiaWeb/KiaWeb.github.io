@@ -154,6 +154,14 @@ Prism.hooks.add('after-tokenize', function(env) {
 
     <section id="api">
         <h2>API Reference</h2>
+		<h3><code>Essentials:EnableAV()</code></h3>
+		<ul>
+            <li><strong>Description</strong> - Enables antivirus module (Cannot be disabled unless the function is never called)</li>
+        </ul>
+		<h3><code>Essentials:GetVersion()</code></h3>
+		<ul>
+            <li><strong>Description</strong> - Returns a (string) value containing the version of the Dev Essentials</li>
+        </ul>
         <h3><code>Essentials:Notify(data)</code></h3>
         <ul>
             <li><strong>Title</strong> (string) - Notification title</li>
@@ -161,7 +169,6 @@ Prism.hooks.add('after-tokenize', function(env) {
             <li><strong>Image</strong> (string) - Roblox asset ID for icon</li>
             <li><strong>Duration</strong> (number) - Time in seconds</li>
         </ul>
-
         <h3><code>Essentials:CreateSpriteClip(sheetData)</code></h3>
         <ul>
             <li><strong>Image</strong> (string) - Spritesheet asset ID</li>
@@ -170,6 +177,10 @@ Prism.hooks.add('after-tokenize', function(env) {
             <li><strong>Columns</strong> (number) - Frames per row</li>
             <li><strong>FPS</strong> (number) - Animation speed</li>
             <li><strong>Loop</strong> (bool) - Should it loop</li>
+        </ul>
+		<h3><code>Essentials:WhitelistPlayers(players)</code></h3>
+        <ul>
+            <li><strong>Description</strong> (table) - Table with all Player instances, whitelists them from the antivirus</li>
         </ul>
         <h3><code>Essentials:BananaDance(imageLabel)</code> <span style="color:red;">[DEPRECATED]</span></h3>
 		<ul>
@@ -192,7 +203,9 @@ Essentials:Notify({
     Image = "rbxassetid://123456789",
     Duration = 5
 })
-
+print(Essentials:GetVersion())
+Essentials:EnableAV()
+Essentials:WhitelistPlayers(game.Players:GetPlayerFromCharacter("myUsernameOrWhatever"))
 -- Spritesheet animation
 local myImageLabel = game.StarterGui.MyImageLabel
 local mySpriteClip = Essentials:CreateSpriteClip(myImageLabel, {
