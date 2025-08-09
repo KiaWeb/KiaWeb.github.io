@@ -158,6 +158,41 @@ Prism.hooks.add('after-tokenize', function(env) {
 		<ul>
             <li><strong>Description</strong> - Enables AntiExploit module (Cannot be disabled unless the function is never called)</li>
         </ul>
+		<h3><code>Essentials:SetAEConfig()</code></h3>
+		<ul>
+			<li><strong>Description</strong> - Sets the AntiExploit configuration values.</li>
+			<li><strong>Parameters</strong> - <strong>table</strong> containing the following keys:</li>
+			<ul>
+				<li><strong>EnforceWalkSpeed</strong> (boolean) - Enforce server authority on walkspeed.</li>
+				<li><strong>AllowedWalkSpeed</strong> (number) - Default walkspeed (e.g., 16).</li>
+				<li><strong>WalkSpeedLeeway</strong> (number) - Wiggle room before resetting/striking.</li>
+
+				<li><strong>EnforceJumpPower</strong> (boolean) - Enforce server authority on jump power.</li>
+				<li><strong>AllowedJumpPower</strong> (number) - Default jump power (R15 commonly 50).</li>
+				<li><strong>JumpPowerLeeway</strong> (number) - Wiggle room before resetting/striking.</li>
+
+				<li><strong>SpeedSpikeEnable</strong> (boolean) - Enable anti-teleport/speed spike detection.</li>
+				<li><strong>MaxRunSpeed</strong> (number) - Max legit ground speed (sprinting, buffs).</li>
+				<li><strong>MaxAirSpeed</strong> (number) - Max legit air speed (knockback cases).</li>
+				<li><strong>TeleportDistance</strong> (number) - One-frame "blink" distance suspicious.</li>
+				<li><strong>GraceOnRespawnSeconds</strong> (number) - Grace period after respawn in seconds.</li>
+
+				<li><strong>NoclipCheckEnable</strong> (boolean) - Enable noclip detection.</li>
+				<li><strong>NoclipSampleInterval</strong> (number) - Interval in seconds between checks.</li>
+				<li><strong>MaxSolidContacts</strong> (number) - Number of solid parts intersecting HRP bounds before suspecting noclip.</li>
+
+				<li><strong>RemoteSpamWindow</strong> (number) - Time window in seconds for remote spam detection.</li>
+				<li><strong>RemoteSpamMaxCalls</strong> (number) - Max calls per window per remote before flagging.</li>
+
+				<li><strong>StrikeToWarn</strong> (number) - Number of strikes before warning.</li>
+				<li><strong>StrikeToKick</strong> (number) - Number of strikes before kicking the player.</li>
+				<li><strong>StrikeToTempBan</strong> (number) - Number of strikes before temporary ban (if implemented).</li>
+
+				<li><strong>Debug</strong> (boolean) - Enable or disable debug messages.</li>
+			</ul>
+			<li><strong>Example not available.</strong></li>
+		</ul>
+
 		<h3><code>Essentials:GetVersion()</code></h3>
 		<ul>
             <li><strong>Description</strong> - Returns a (string) value containing the version of the Dev Essentials</li>
