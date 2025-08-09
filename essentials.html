@@ -205,7 +205,7 @@ Essentials:Notify({
 })
 print(Essentials:GetVersion())
 Essentials:EnableAV()
-Essentials:WhitelistPlayers(game.Players:GetPlayerFromCharacter("myUsernameOrWhatever"))
+Essentials:WhitelistPlayers({game.Players:GetPlayerFromCharacter("myUsernameOrWhatever")})
 -- Spritesheet animation
 local myImageLabel = game.StarterGui.MyImageLabel
 local mySpriteClip = Essentials:CreateSpriteClip(myImageLabel, {
