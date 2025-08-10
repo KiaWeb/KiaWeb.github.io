@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kia – Video Archive</title>
+
+  <!-- Fonts: keep SF Pro as in your file -->
+  <link rel="preconnect" href="https://lightspeed.kiascdn.org" crossorigin>
+  <style>
+    /* ——— Keep your SF Pro ——— */
+    @font-face { font-family:"SF Pro Display"; src:url("https://lightspeed.kiascdn.org/fonts/SFPRODISPLAYREGULAR.OTF") format("opentype"); font-weight:400; font-style:normal; font-display:swap; }
+    @font-face { font-family:"SF Pro Display"; src:url("https://lightspeed.kiascdn.org/fonts/SFPRODISPLAYSEMIBOLD.OTF") format("opentype"); font-weight:600; font-style:normal; font-display:swap; }
+
+    /* ——— AERO THEME TOKENS ——— */
+    :root{
+      /* Wallpaper hues (Windows 7-ish blues by default) */
+      --wall-1:#0a2a53; --wall-2:#104a82; --wall-3:#0b7ab3; --wall-4:#7bc4ff;
+
+      /* Base UI colors derived from your original */
+      --bg:#f7fbff; --text:#0f172a; --muted:#64748b; --accent:#2563eb; --stroke:rgba(15,23,42,.08);
+
+      /* Glass & chrome */
+      --panel: rgba(255,255,255,.45);
+      --panel-border: rgba(255,255,255,.65);
+      --panel-outer: rgba(0,0,0,.18);
+      --panel-shadow: 0 18px 54px rgba(0,0,0,.22);
+      --glass-blur: 16px;
+
+      /* Item states */
+      --hover: #00000010; --active: #2563eb18; --active-border:#3b82f655;
+    }
+    [data-theme="dark"]{
+      --bg:#0b1020; --text:#e6ebf4; --muted:#94a3b8; --accent:#60a5fa; --stroke:rgba(255,255,255,.12);
+      --panel: rgba(20,26,40,.50);
+      --panel-border: rgba(255,255,255,.55);
+      --panel-outer: rgba(0,0,0,.55);
+      --panel-shadow: 0 20px 60px rgba(0,0,0,.55);
+      --hover:#ffffff18; --active:#60a5fa26; --active-border:#60a5fa55;
+    }
+
+    /* Reset */
+    *,*::before,*::after{ box-sizing:border-box }
+    html,body{ height:100% }
+    body{ margin:0; font-family:"SF Pro Display", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; color:var(--text); }
+
+    /* Animated Aurora wallpaper */
+    body{
+      background:
+        radial-gradient(1200px 680px at 8% -10%, rgba(123,196,255,.22), transparent 55%),
+        radial-gradient(840px 520px at 104% 6%, rgba(62,166,255,.18), transparent 55%),
+        linear-gradient(130deg, var(--wall-1), var(--wall-2) 35%, var(--wall-3) 70%, var(--wall-2));
+      background-size:220% 220%;
+      animation: wallShift 26s ease-in-out infinite;
+      overflow:hidden;
+    }
+    @keyframes wallShift{0%{background-position:0% 40%}50%{background-position:100% 60%}100%{background-position:0% 40%}}
+
+    /* Subtle light streaks */
+    .streaks::before,.streaks::after{
+      content:""; position:fixed; inset:-20%; pointer-events:none; mix-blend-mode:screen; opacity:.5;
+      background:
+        radial-gradient(50% 80% at 30% 10%, rgba(255,255,255,.18), transparent 60%),
+        radial-gradient(40% 60% at 80% 18%, rgba(255,255,255,.12), transparent 60%),
+        radial-gradient(40% 60% at 60% 90%, rgba(123,196,255,.12), transparent 65%);
+      filter:blur(30px) saturate(120%);
+      animation: streakDrift 30s ease-in-out infinite alternate;
+    }
+    .streaks::after{ animation-duration:38s; opacity:.35 }
+    @keyframes streakDrift{from{transform:translate3d(-12px,0,0)}to{transform:translate3d(12px,0,0)}}
+
+    /* Layout */
+    .wrap{ display:grid; grid-template-columns:1.25fr .85fr; gap:16px; height:100%; padding:16px; max-width:1400px; margin:0 auto; }
+
+    /* —— AERO WINDOW PANEL —— */
+    .panel{
+      position:relative; border-radius:16px; padding:14px; background:linear-gradient(180deg, var(--panel), rgba(255,255,255,.30));
+      border:1px solid var(--panel-border); box-shadow: var(--panel-shadow);
+      backdrop-filter: blur(var(--glass-blur)) saturate(120%); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(120%);
+      overflow:hidden; min-height:0;
+    }
+    /* Inner highlights + subtle bevel */
+    .panel::before{ content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; box-shadow: inset 0 1px 0 rgba(255,255,255,.9), inset 0 0 0 1px rgba(255,255,255,.08); }
+
+    /* Panel headers (chips) */
+    .panel .chip{ display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; font-weight:600; font-size:.8rem; color:var(--muted); background:rgba(255,255,255,.55); border:1px solid rgba(255,255,255,.75); box-shadow: inset 0 1px 0 rgba(255,255,255,.9); backdrop-filter: blur(8px); }
+
+    /* Player card */
+    .player-card{ display:flex; flex-direction:column; gap:10px; }
+    .title{ font-weight:600; font-size:1.1rem; line-height:1.3; margin:0; color:var(--text); word-break:break-word; text-shadow:0 1px 0 rgba(255,255,255,.6); }
+    .player{ flex:1; display:flex; align-items:center; justify-content:center; min-height:0; }
+
+    /* Video chrome */
+    video{ width:100%; height:100%; max-height:74vh; background:#000; border-radius:12px; outline:none; border:1px solid var(--panel-border); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.25), 0 14px 36px rgba(0,0,0,.28); }
+    video::cue{ font-family: "SF Pro Display", system-ui; }
+
+    /* Glow ring around the player */
+    .player::after{ content:""; position:absolute; inset:auto; width:75%; height:18px; bottom:8px; left:12.5%; border-radius:999px; filter:blur(16px); background: radial-gradient(50% 100% at 50% 120%, rgba(62,166,255,.35), transparent 70%); pointer-events:none; }
+
+    /* List card */
+    .list-card{ display:flex; flex-direction:column; gap:10px; }
+    .topbar{ display:flex; align-items:center; gap:8px; }
+
+    .theme-toggle{ margin-left:auto; border:1px solid var(--panel-border); background:rgba(255,255,255,.45); color:var(--text); padding:8px 12px; border-radius:999px; cursor:pointer; font-weight:600; box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 8px 20px rgba(0,0,0,.12); }
+    .theme-toggle:active{ transform:translateY(1px) }
+
+    .search{ width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--panel-border); background:rgba(255,255,255,.6); color:var(--text); outline:none; box-shadow: inset 0 1px 0 rgba(255,255,255,.9); }
+
+    .list{ overflow:auto; min-height:0; padding-right:2px; }
+    .item{ width:100%; text-align:left; padding:10px 12px; border-radius:10px; border:1px solid transparent; background:transparent; color:var(--text); cursor:pointer; margin:6px 0; transition: .15s ease; font-weight:600; }
+    .item:hover{ background:var(--hover); border-color:var(--stroke) }
+    .active{ background:var(--active); border-color: var(--active-border); }
+
+    /* Focus visibility */
+    .item:focus-visible, .theme-toggle:focus-visible, .search:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){ body{ animation:none } .streaks::before,.streaks::after{ animation:none } }
+
+    @media (max-width:960px){
+      .wrap{ grid-template-columns:1fr }
+      video{ max-height:58vh }
+    }
+  </style>
+</head>
+<body>
+  <div class="streaks"></div>
+  <div class="wrap">
+    <!-- Left: player -->
+    <section class="panel player-card">
+      <span class="chip" aria-hidden="true">Now Playing</span>
+      <h1 class="title" id="nowTitle">Select a video…</h1>
+      <div class="player">
+        <video id="player" controls playsinline preload="metadata"></video>
+      </div>
+    </section>
+
+    <!-- Right: list -->
+    <aside class="panel list-card">
+      <div class="topbar">
+		<input id="search" class="search" type="search" placeholder="Search videos…" aria-label="Search videos">
+		<a style="text-decoration: none;" href="index.html" class="theme-toggle" title="Go back to Home">Home</a>
+		<button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">🌙 Dark</button>
+	  </div>
+
+      <div id="list" class="list" role="listbox" aria-label="Video list"></div>
+    </aside>
+  </div>
+
+  <script>
+    // Theme toggle with memory (unchanged behavior)
+    (function initTheme(){
+      const saved=localStorage.getItem("kia-theme");
+      const prefersDark=window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.setAttribute("data-theme", saved || (prefersDark ? "dark" : "light"));
+      updateThemeBtn();
+    })();
+    function updateThemeBtn(){
+      const isDark=document.documentElement.getAttribute("data-theme")==="dark";
+      const btn=document.getElementById("themeToggle");
+      btn.textContent = isDark ? "☀️ Light" : "🌙 Dark";
+    }
+    document.getElementById("themeToggle").addEventListener("click", ()=>{
+      const root=document.documentElement;
+      const next = root.getAttribute("data-theme")==="dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      localStorage.setItem("kia-theme", next);
+      updateThemeBtn();
+    });
+
+    // Allow tint cycling (optional Aero tints)
+    const TINTS = [
+      { w1:'#0a2a53', w2:'#104a82', w3:'#0b7ab3' },
+      { w1:'#092b2b', w2:'#0f4d4d', w3:'#0ba39a' },
+      { w1:'#2b0a3b', w2:'#4d0f82', w3:'#a30bb0' },
+      { w1:'#2b160a', w2:'#824a0f', w3:'#b36b0b' }
+    ];
+    let tintIndex = 0;
+    document.addEventListener('keydown', (e)=>{
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='t'){
+        e.preventDefault();
+        tintIndex = (tintIndex+1)%TINTS.length;
+        const t = TINTS[tintIndex];
+        const r = document.documentElement.style;
+        r.setProperty('--wall-1', t.w1);
+        r.setProperty('--wall-2', t.w2);
+        r.setProperty('--wall-3', t.w3);
+      }
+    });
+
+    // Fetch and render list (same logic, styled for Aero)
+    const XML_URL = "https://lightspeed.kiascdn.org/videos/videos.xml";
+    const listEl = document.getElementById("list");
+    const player = document.getElementById("player");
+    const titleEl = document.getElementById("nowTitle");
+    const searchEl = document.getElementById("search");
+    let items = [];
+
+    fetch(XML_URL)
+      .then(r => r.text())
+      .then(txt => new DOMParser().parseFromString(txt, "text/xml"))
+      .then(xml => {
+        const nodes = Array.from(xml.getElementsByTagName("video"));
+        items = nodes.map(n => ({
+          name: n.getElementsByTagName("name")[0]?.textContent?.trim() || "Untitled",
+          link: n.getElementsByTagName("link")[0]?.textContent?.trim() || ""
+        })).filter(v => v.link);
+
+        renderList(items);
+        if (items.length) select(items[0]);
+      })
+      .catch(err => {
+        titleEl.textContent = "Failed to load archive.";
+        console.error("Archive load error:", err);
+      });
+
+    function renderList(arr){
+      listEl.innerHTML = "";
+      arr.forEach((v, i) => {
+        const btn = document.createElement("button");
+        btn.className = "item";
+        btn.role = "option";
+        btn.textContent = v.name;
+        btn.addEventListener("click", () => select(v, btn));
+        listEl.appendChild(btn);
+        if (i===0) btn.classList.add("active");
+      });
+    }
+
+    function select(video, btnEl){
+      document.querySelectorAll(".item.active").forEach(e => e.classList.remove("active"));
+      if (btnEl) btnEl.classList.add("active");
+
+      titleEl.textContent = video.name;
+      player.src = video.link;
+      player.play?.().catch(()=>{});
+    }
+
+    // Simple search/filter
+    searchEl.addEventListener("input", () => {
+      const q = searchEl.value.toLowerCase();
+      const filtered = items.filter(v => v.name.toLowerCase().includes(q));
+      renderList(filtered);
+    });
+  </script>
+</body>
+</html>
