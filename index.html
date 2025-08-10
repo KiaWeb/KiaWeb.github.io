@@ -1,117 +1,231 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" data-theme="light">
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
+  <meta name="color-scheme" content="light dark" />
   <title>Kia's Video Player</title>
+
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      background-color: #000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+    /* ——— SF Pro Display from your CDN ——— */
+    @font-face { font-family:"SF Pro Display"; src:url("https://lightspeed.kiascdn.org/fonts/SFPRODISPLAYULTRALIGHT.OTF") format("opentype"); font-weight:100; font-style:normal; font-display:swap; }
+    @font-face { font-family:"SF Pro Display"; src:url("https://lightspeed.kiascdn.org/fonts/SFPRODISPLAYULTRALIGHTITALIC.OTF") format("opentype"); font-weight:100; font-style:italic; font-display:swap; }
+
+    @font-face { font-family:"SF Pro Display"; src:url("https://lightspeed.kiascdn.org/fonts/SFPRODISPLAYTHIN.OTF") format("opentype"); font-weight:200; font-style:normal; font-display:swap; }
+    @font-face { font-family:"SF Pro Display"; src:url("https://lightspeed.kiascdn.org/fonts/SFPRODISPLAYTHINITALIC.OTF") format("opentype"); font-weight:200; font-style:italic; font-display:swap; }
+
+    @font-face { font-family:"SF Pro Display"; src:url("https://lightspeed.kiascdn.org/fonts/SFPRODISPLAYLIGHT.OTF") format("opentype"); font-weight:300; font-style:normal; font-display:swap; }
+    @font-face { font-family:"SF Pro Display"; src:url("https://lightspeed.kiascdn.org/fonts/SFPRODISPLAYLIGHTITALIC.OTF") format("opentype"); font-weight:300; font-style:italic; font-display:swap; }
+
+    @font-face { font-family:"SF Pro Display"; src:url("https://lightspeed.kiascdn.org/fonts/SFPRODISPLAYREGULAR.OTF") format("opentype"); font-weight:400; font-style:normal; font-display:swap; }
+    @font-face { font-family:"SF Pro Display"; src:url("https://lightspeed.kiascdn.org/fonts/SFPRODISPLAYITALIC.OTF") format("opentype"); font-weight:400; font-style:italic; font-display:swap; }
+
+    @font-face { font-family:"SF Pro Display"; src:url("https://lightspeed.kiascdn.org/fonts/SFPRODISPLAYMEDIUM.OTF") format("opentype"); font-weight:500; font-style:normal; font-display:swap; }
+    @font-face { font-family:"SF Pro Display"; src:url("https://lightspeed.kiascdn.org/fonts/SFPRODISPLAYMEDIUMITALIC.OTF") format("opentype"); font-weight:500; font-style:italic; font-display:swap; }
+
+    @font-face { font-family:"SF Pro Display"; src:url("https://lightspeed.kiascdn.org/fonts/SFPRODISPLAYSEMIBOLD.OTF") format("opentype"); font-weight:600; font-style:normal; font-display:swap; }
+    @font-face { font-family:"SF Pro Display"; src:url("https://lightspeed.kiascdn.org/fonts/SFPRODISPLAYSEMIBOLDITALIC.OTF") format("opentype"); font-weight:600; font-style:italic; font-display:swap; }
+
+    @font-face { font-family:"SF Pro Display"; src:url("https://lightspeed.kiascdn.org/fonts/SFPRODISPLAYBOLD.OTF") format("opentype"); font-weight:700; font-style:normal; font-display:swap; }
+    @font-face { font-family:"SF Pro Display"; src:url("https://lightspeed.kiascdn.org/fonts/SFPRODISPLAYBOLDITALIC.OTF") format("opentype"); font-weight:700; font-style:italic; font-display:swap; }
+
+    @font-face { font-family:"SF Pro Display"; src:url("https://lightspeed.kiascdn.org/fonts/SFPRODISPLAYHEAVY.OTF") format("opentype"); font-weight:800; font-style:normal; font-display:swap; }
+    @font-face { font-family:"SF Pro Display"; src:url("https://lightspeed.kiascdn.org/fonts/SFPRODISPLAYHEAVYITALIC.OTF") format("opentype"); font-weight:800; font-style:italic; font-display:swap; }
+
+    @font-face { font-family:"SF Pro Display"; src:url("https://lightspeed.kiascdn.org/fonts/SFPRODISPLAYBLACK.OTF") format("opentype"); font-weight:900; font-style:normal; font-display:swap; }
+    @font-face { font-family:"SF Pro Display"; src:url("https://lightspeed.kiascdn.org/fonts/SFPRODISPLAYBLACKITALIC.OTF") format("opentype"); font-weight:900; font-style:italic; font-display:swap; }
+
+    :root {
+      /* Light theme */
+      --bg1:#f7fbff; --bg2:#e9f2ff; --bg3:#fffaf3;
+      --text:#0f172a; --muted:#4b5563;
+      --card:rgba(255,255,255,0.7); --stroke:rgba(15,23,42,0.06);
+      --accent:#2563eb;
+      --aura-1:rgba(0,164,255,.35); --aura-2:rgba(136,57,255,.32); --aura-3:rgba(0,214,143,.28);
+      --title-bg:rgba(255,255,255,.55); --title-stroke:rgba(15,23,42,.12);
+      --player-glass:rgba(255,255,255,.45); --player-stroke:rgba(15,23,42,.08);
     }
 
-    p {
-      font-family: Tahoma, sans-serif;
-      color: white;
-      font-size: 20px;
-      margin: 20px 0 10px;
+    [data-theme="dark"] {
+      /* Dark theme */
+      --bg1:#0b1020; --bg2:#0b1a2a; --bg3:#1a1030;
+      --text:#e6ebf4; --muted:#a3afc2;
+      --card:rgba(20,24,38,0.55); --stroke:rgba(255,255,255,0.07);
+      --accent:#60a5fa;
+      --aura-1:rgba(0,164,255,.45); --aura-2:rgba(136,57,255,.42); --aura-3:rgba(0,214,143,.38);
+      --title-bg:rgba(20,24,38,.6); --title-stroke:rgba(255,255,255,.12);
+      --player-glass:rgba(20,24,38,.55); --player-stroke:rgba(255,255,255,.08);
     }
 
-    .player-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      flex-grow: 1;
+    /* Smooth fade animation when theme changes */
+    html { transition: background-color .4s ease, color .4s ease; }
+    body, #videoTitle, .flash-player, .theme-toggle {
+      transition: background .4s ease, color .4s ease, border-color .4s ease, box-shadow .4s ease;
     }
 
-    .flash-player {
-      width: 80%;
-      height: 80%;
+    /* Base layout */
+    html, body { margin:0; height:100%; }
+    body{
+      display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
+      font-family:"SF Pro Display", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, var(--bg2) 0%, transparent 45%),
+        radial-gradient(900px 500px at 110% 10%, var(--bg3) 0%, transparent 45%),
+        linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+      background-size:600% 600%;
+      animation:bgShift 18s ease-in-out infinite;
+    }
+    @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    @media (prefers-reduced-motion:reduce){ body{animation:none}.aura::before,.aura::after,.flash-player::before{animation:none!important} }
+
+    /* Theme toggle */
+    .theme-toggle{
+      position:fixed; top:14px; right:14px; z-index:5;
+      display:inline-flex; align-items:center; gap:10px; padding:10px 14px;
+      border-radius:999px; background:var(--card); border:1px solid var(--stroke);
+      box-shadow:0 8px 24px rgba(0,0,0,.08); color:var(--text);
+      cursor:pointer; user-select:none; backdrop-filter:blur(10px); -webkit-tap-highlight-color:transparent;
+    }
+    .theme-toggle .icon{font-size:1.05rem; line-height:1}
+    .theme-toggle .label{font-size:.9rem; opacity:.8}
+
+    /* Title */
+    #videoTitle{
+      margin:22px 0 12px; padding:12px 18px; font-size:1.25rem; font-weight:800;
+      color:var(--text); background:var(--title-bg); border:1px solid var(--title-stroke);
+      border-radius:14px; backdrop-filter:blur(8px); text-align:center;
+      max-width:min(92vw,1080px); word-break:break-word; box-shadow:0 6px 22px rgba(0,0,0,.08);
+    }
+
+    /* Player container + aura wrapper */
+    .player-container{ display:flex; justify-content:center; align-items:center; flex-grow:1; width:100%; max-width:1280px; padding:18px; box-sizing:border-box; }
+    .aura{ position:relative; width:100%; aspect-ratio:16/9; max-height:calc(100vh - 180px); border-radius:30px; padding:10px; }
+
+    /* Soft, curvy outer aura */
+    .aura::before,.aura::after{
+      content:""; position:absolute; inset:-18px; border-radius:36px; z-index:0; pointer-events:none;
+      background:
+        radial-gradient(120px 120px at 10% 30%, var(--aura-1), transparent 70%),
+        radial-gradient(160px 160px at 85% 25%, var(--aura-2), transparent 70%),
+        radial-gradient(140px 140px at 40% 90%, var(--aura-3), transparent 70%);
+      filter:blur(18px) saturate(1.2); animation:auraDrift 18s ease-in-out infinite alternate; transition:background .4s ease;
+    }
+    .aura::after{ inset:-26px; filter:blur(28px) saturate(1.25); opacity:.75; animation-duration:22s; }
+    @keyframes auraDrift{0%{transform:translate3d(0,0,0) rotate(0)}50%{transform:translate3d(2px,-4px,0) rotate(.5deg)}100%{transform:translate3d(-2px,4px,0) rotate(-.5deg)}}
+
+    /* Player */
+    .flash-player{
+      position:relative; z-index:1; width:100%; height:100%; border-radius:24px; overflow:hidden;
+      background:var(--player-glass); border:1px solid var(--player-stroke);
+      box-shadow:0 0 0 10px rgba(255,255,255,0.04) inset, 0 14px 38px rgba(0,0,0,.18);
+      backdrop-filter:blur(6px);
+    }
+
+    /* Curvy neon-ish outline */
+    .flash-player::before{
+      content:""; position:absolute; inset:-12px; border-radius:30px; z-index:-1;
+      background:conic-gradient(from 0deg,
+        rgba(0,164,255,0)   0deg,
+        rgba(0,164,255,.35) 70deg,
+        rgba(136,57,255,.35) 160deg,
+        rgba(0,214,143,.32) 260deg,
+        rgba(0,164,255,0) 360deg);
+      filter:blur(12px); animation:outlineSpin 12s linear infinite; mix-blend-mode:screen;
+    }
+    @keyframes outlineSpin{to{transform:rotate(360deg)}}
+
+    .error{ font-size:1rem; color:#e11d48; margin-top:10px; }
+
+    @media (max-width:768px){
+      #videoTitle{ font-size:1.05rem; padding:10px 14px; }
+      .aura{ border-radius:22px; }
+      .flash-player{ border-radius:18px; }
     }
   </style>
-  <!-- Ruffle Emulator -->
+
   <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 </head>
 <body>
+  <!-- Theme toggle -->
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle color theme">
+    <span class="icon" id="themeIcon">🌙</span>
+    <span class="label" id="themeLabel">Dark mode</span>
+  </button>
 
   <p id="videoTitle">Loading video...</p>
 
   <div class="player-container" id="playerContainer">
-    <!-- Flash or Ruffle will be injected here -->
+    <div class="aura"></div>
   </div>
 
   <script>
+    (function initTheme(){
+      const root=document.documentElement;
+      const saved=localStorage.getItem("kia-theme");
+      const prefersDark=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;
+      root.setAttribute("data-theme",(saved==="dark"||(!saved&&prefersDark))?"dark":"light");
+      updateThemeToggleUI();
+    })();
+
+    function updateThemeToggleUI(){
+      const isDark=document.documentElement.getAttribute("data-theme")==="dark";
+      document.getElementById("themeIcon").textContent=isDark?"☀️":"🌙";
+      document.getElementById("themeLabel").textContent=isDark?"Light mode":"Dark mode";
+    }
+
+    document.getElementById("themeToggle").addEventListener("click",()=>{
+      const root=document.documentElement;
+      const isDark=root.getAttribute("data-theme")==="dark";
+      root.setAttribute("data-theme",isDark?"light":"dark");
+      localStorage.setItem("kia-theme",isDark?"light":"dark");
+      updateThemeToggleUI();
+    });
+
+    // Player setup
     fetch("https://lightspeed.kiascdn.org/videos/videos.xml")
-      .then(response => response.text())
-      .then(xmlText => {
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-        const videos = xmlDoc.getElementsByTagName("video");
+      .then(r=>r.text())
+      .then(xmlText=>{
+        const doc=new DOMParser().parseFromString(xmlText,"text/xml");
+        const list=doc.getElementsByTagName("video");
+        const title=document.getElementById("videoTitle");
+        if(!list.length){ title.textContent="No videos found."; title.classList.add("error"); return; }
 
-        if (videos.length === 0) {
-          document.getElementById("videoTitle").textContent = "No videos found.";
-          return;
-        }
+        const v=list[Math.floor(Math.random()*list.length)];
+        const name=v.getElementsByTagName("name")[0].textContent;
+        const link=v.getElementsByTagName("link")[0].textContent;
+        title.textContent="Now playing: "+name;
 
-        // Pick a random video
-        const randomIndex = Math.floor(Math.random() * videos.length);
-        const selectedVideo = videos[randomIndex];
+        const mount=document.querySelector(".aura");
+        const hasFlash=((typeof navigator.plugins!=="undefined"&&typeof navigator.plugins["Shockwave Flash"]==="object")
+          || (window.ActiveXObject&&(new ActiveXObject("ShockwaveFlash.ShockwaveFlash"))!==false));
 
-        const videoName = selectedVideo.getElementsByTagName("name")[0].textContent;
-        const videoLink = selectedVideo.getElementsByTagName("link")[0].textContent;
-
-        // Update the <p> tag
-        document.getElementById("videoTitle").textContent = "Video name: " + videoName;
-
-        // Check for Flash support (almost always false now)
-var hasFlash = ((typeof navigator.plugins !== "undefined" && typeof navigator.plugins["Shockwave Flash"] === "object") || (window.ActiveXObject && (new ActiveXObject("ShockwaveFlash.ShockwaveFlash")) !== false));
-   
-        if (hasFlash) {
-          // Old Flash method (for ancient browsers)
-          const flashObject = document.createElement("object");
-          flashObject.setAttribute("data", "NewVideoPlayer.swf");
-          flashObject.setAttribute("type", "application/x-shockwave-flash");
-          flashObject.setAttribute("width", "80%");
-          flashObject.setAttribute("height", "80%");
-
-          flashObject.innerHTML = `
+        if(hasFlash){
+          const obj=document.createElement("object");
+          obj.setAttribute("data","NewVideoPlayer.swf");
+          obj.setAttribute("type","application/x-shockwave-flash");
+          obj.style.width="100%"; obj.style.height="100%"; obj.className="flash-player";
+          obj.innerHTML=`
             <param name="movie" value="NewVideoPlayer.swf" />
             <param name="allowFullScreen" value="true" />
             <param name="allowScriptAccess" value="always" />
             <param name="wmode" value="direct" />
-            <param name="FlashVars" value="videoPath=${encodeURIComponent(videoLink)}" />
+            <param name="FlashVars" value="videoPath=${encodeURIComponent(link)}" />
           `;
-
-          document.getElementById("playerContainer").appendChild(flashObject);
+          mount.appendChild(obj);
         } else {
-          // Use Ruffle
-          const ruffle = window.RufflePlayer.newest();
-          const player = ruffle.createPlayer();
+          const ruffle=window.RufflePlayer.newest();
+          const player=ruffle.createPlayer();
           player.classList.add("flash-player");
-
-          document.getElementById("playerContainer").appendChild(player);
-
-          // Load the SWF and pass FlashVars
-          player.load({
-            url: "NewVideoPlayer.swf",
-            parameters: {
-              videoPath: videoLink
-            }
-          });
+          mount.appendChild(player);
+          player.load({ url:"NewVideoPlayer.swf", parameters:{ videoPath:link } });
         }
       })
-      .catch(error => {
-        document.getElementById("videoTitle").textContent = "Error loading video list.";
-        console.error("XML Load Error:", error);
+      .catch(err=>{
+        const t=document.getElementById("videoTitle");
+        t.textContent="Error loading video list."; t.classList.add("error");
+        console.error("XML Load Error:", err);
       });
   </script>
-
 </body>
 </html>
