@@ -196,7 +196,7 @@
       });
     })();
 
-    // ——— Player Setup (preserves your XML + Ruffle logic) ———
+    // ——— Player Setup (using <video> instead of Flash/Ruffle) ———
     fetch("https://lightspeed.kiascdn.org/videos/videos.xml")
       .then(r => r.text())
       .then(xmlText => {
@@ -212,6 +212,8 @@
 
         const mount = document.getElementById('aeroPanel');
 
+        // OLD Flash / Ruffle code commented out:
+        /*
         const hasFlash = ((typeof navigator.plugins !== "undefined" && typeof navigator.plugins["Shockwave Flash"] === "object")
           || (window.ActiveXObject && (new ActiveXObject("ShockwaveFlash.ShockwaveFlash")) !== false));
 
@@ -235,12 +237,25 @@
           mount.appendChild(player);
           player.load({ url: "NewVideoPlayer.swf", parameters: { videoPath: link } });
         }
+        */
+
+        // NEW: Simple HTML5 video element
+        const vid = document.createElement("video");
+        vid.className = "flash-player";
+        vid.src = link;
+        vid.controls = true;
+        vid.playsInline = true;
+        vid.preload = "metadata";
+        vid.style.width = "100%";
+        vid.style.height = "100%";
+        mount.appendChild(vid);
       })
       .catch(err => {
         const t = document.getElementById("videoTitle");
         t.textContent = "Error loading video list."; t.classList.add("error");
         console.error("XML Load Error:", err);
       });
-  </script>
+</script>
+
 </body>
 </html>
