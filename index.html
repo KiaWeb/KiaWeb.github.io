@@ -197,65 +197,60 @@
       });
     })();
 
-    // ——— Player Setup (using <video> instead of Flash/Ruffle) ———
-    fetch("https://lightspeed.kiascdn.org/videos/videos.xml")
-      .then(r => r.text())
-      .then(xmlText => {
-        const doc = new DOMParser().parseFromString(xmlText, "text/xml");
-        const list = doc.getElementsByTagName("video");
-        const title = document.getElementById("videoTitle");
-        if (!list.length) { title.textContent = "No videos found."; title.classList.add("error"); return; }
+     // ——— Player Setup (using <video> instead of Flash/Ruffle) ———
+  fetch("https://lightspeed.kiascdn.org/videos/videos.xml")
+    .then(r => r.text())
+    .then(xmlText => {
+      const doc = new DOMParser().parseFromString(xmlText, "text/xml");
+      const list = Array.from(doc.getElementsByTagName("video"));
+      const title = document.getElementById("videoTitle");
+      if (!list.length) { title.textContent = "No videos found."; title.classList.add("error"); return; }
 
-        const v = list[Math.floor(Math.random() * list.length)];
-        const name = v.getElementsByTagName("name")[0].textContent;
-        const link = v.getElementsByTagName("link")[0].textContent;
-        title.textContent = "Now playing: " + name;
+      // Read requested id (supports ?id=123 or bare ?123 …and even /id?123)
+      const url = new URL(location.href);
+      let requestedId = url.searchParams.get("id");
+      if (!requestedId) {
+        const bare = url.search.replace(/^\?/, "").trim(); // e.g., ?123
+        requestedId = bare || null;
+      }
 
-        const mount = document.getElementById('aeroPanel');
-
-        // OLD Flash / Ruffle code commented out:
-        /*
-        const hasFlash = ((typeof navigator.plugins !== "undefined" && typeof navigator.plugins["Shockwave Flash"] === "object")
-          || (window.ActiveXObject && (new ActiveXObject("ShockwaveFlash.ShockwaveFlash")) !== false));
-
-        if (hasFlash) {
-          const obj = document.createElement("object");
-          obj.setAttribute("data", "NewVideoPlayer.swf");
-          obj.setAttribute("type", "application/x-shockwave-flash");
-          obj.style.width = "100%"; obj.style.height = "100%"; obj.className = "flash-player";
-          obj.innerHTML = `
-            <param name="movie" value="NewVideoPlayer.swf" />
-            <param name="allowFullScreen" value="true" />
-            <param name="allowScriptAccess" value="always" />
-            <param name="wmode" value="direct" />
-            <param name="FlashVars" value="videoPath=${encodeURIComponent(link)}" />
-          `;
-          mount.appendChild(obj);
-        } else {
-          const ruffle = window.RufflePlayer.newest();
-          const player = ruffle.createPlayer();
-          player.classList.add("flash-player");
-          mount.appendChild(player);
-          player.load({ url: "NewVideoPlayer.swf", parameters: { videoPath: link } });
-        }
-        */
-
-        // NEW: Simple HTML5 video element
-        const vid = document.createElement("video");
-        vid.className = "flash-player";
-        vid.src = link;
-        vid.controls = true;
-        vid.playsInline = true;
-        vid.preload = "metadata";
-        vid.style.width = "100%";
-        vid.style.height = "100%";
-        mount.appendChild(vid);
-      })
-      .catch(err => {
-        const t = document.getElementById("videoTitle");
-        t.textContent = "Error loading video list."; t.classList.add("error");
-        console.error("XML Load Error:", err);
+      // Helper: find video by <id>
+      const byId = (id)=> list.find(v => {
+        const node = v.getElementsByTagName("id")[0];
+        return node && node.textContent.trim() === String(id).trim();
       });
+
+      // Pick video: by id if valid, else random
+      let v = requestedId ? byId(requestedId) : null;
+      if (!v) {
+        if (requestedId) console.warn(`Video id "${requestedId}" not found. Using random.`);
+        v = list[Math.floor(Math.random() * list.length)];
+      }
+
+      const name = v.getElementsByTagName("name")[0]?.textContent || "Untitled";
+      const link = v.getElementsByTagName("link")[0]?.textContent;
+      if (!link) { title.textContent = "Invalid video item (missing link)."; title.classList.add("error"); return; }
+
+      title.textContent = "Now playing: " + name;
+
+      const mount = document.getElementById('aeroPanel');
+
+      // HTML5 video element
+      const vid = document.createElement("video");
+      vid.className = "flash-player";
+      vid.src = link;
+      vid.controls = true;
+      vid.playsInline = true;
+      vid.preload = "metadata";
+      vid.style.width = "100%";
+      vid.style.height = "100%";
+      mount.appendChild(vid);
+    })
+    .catch(err => {
+      const t = document.getElementById("videoTitle");
+      t.textContent = "Error loading video list."; t.classList.add("error");
+      console.error("XML Load Error:", err);
+    });
 </script>
 
 </body>
