@@ -204,18 +204,23 @@
       const doc = new DOMParser().parseFromString(xmlText, "text/xml");
       const list = Array.from(doc.getElementsByTagName("video"));
       const title = document.getElementById("videoTitle");
-      if (!list.length) { title.textContent = "No videos found."; title.classList.add("error"); return; }
 
-      // Read requested id (supports ?id=123 or bare ?123 …and even /id?123)
+      if (!list.length) {
+        title.textContent = "No videos found.";
+        title.classList.add("error");
+        return;
+      }
+
+      // Read requested id from URL
       const url = new URL(location.href);
       let requestedId = url.searchParams.get("id");
       if (!requestedId) {
-        const bare = url.search.replace(/^\?/, "").trim(); // e.g., ?123
+        const bare = url.search.replace(/^\?/, "").trim();
         requestedId = bare || null;
       }
 
       // Helper: find video by <id>
-      const byId = (id)=> list.find(v => {
+      const byId = (id) => list.find(v => {
         const node = v.getElementsByTagName("id")[0];
         return node && node.textContent.trim() === String(id).trim();
       });
@@ -225,11 +230,29 @@
       if (!v) {
         if (requestedId) console.warn(`Video id "${requestedId}" not found. Using random.`);
         v = list[Math.floor(Math.random() * list.length)];
+
+        // Get chosen ID
+        const chosenId = v.getElementsByTagName("id")[0]?.textContent?.trim();
+        if (chosenId) {
+          // Update the browser URL without reloading
+          history.replaceState(null, "", `?id=${encodeURIComponent(chosenId)}`);
+        }
       }
 
       const name = v.getElementsByTagName("name")[0]?.textContent || "Untitled";
       const link = v.getElementsByTagName("link")[0]?.textContent;
-      if (!link) { title.textContent = "Invalid video item (missing link)."; title.classList.add("error"); return; }
+      const chosenIdFinal = v.getElementsByTagName("id")[0]?.textContent?.trim();
+
+      if (!link) {
+        title.textContent = "Invalid video item (missing link).";
+        title.classList.add("error");
+        return;
+      }
+
+      // Always update URL to show the actual playing video's ID
+      if (chosenIdFinal && chosenIdFinal !== requestedId) {
+        history.replaceState(null, "", `?id=${encodeURIComponent(chosenIdFinal)}`);
+      }
 
       title.textContent = "Now playing: " + name;
 
@@ -248,7 +271,8 @@
     })
     .catch(err => {
       const t = document.getElementById("videoTitle");
-      t.textContent = "Error loading video list."; t.classList.add("error");
+      t.textContent = "Error loading video list.";
+      t.classList.add("error");
       console.error("XML Load Error:", err);
     });
 </script>
