@@ -191,58 +191,73 @@
 
     // Fetch and render list (same logic, styled for Aero)
     const XML_URL = "https://lightspeed.kiascdn.org/videos/videos.xml";
-    const listEl = document.getElementById("list");
-    const player = document.getElementById("player");
-    const titleEl = document.getElementById("nowTitle");
-    const searchEl = document.getElementById("search");
-    let items = [];
+const listEl = document.getElementById("list");
+const player = document.getElementById("player");
+const titleEl = document.getElementById("nowTitle");
+const searchEl = document.getElementById("search");
+let items = [];
 
-    fetch(XML_URL)
-      .then(r => r.text())
-      .then(txt => new DOMParser().parseFromString(txt, "text/xml"))
-      .then(xml => {
-        const nodes = Array.from(xml.getElementsByTagName("video"));
-        items = nodes.map(n => ({
-          name: n.getElementsByTagName("name")[0]?.textContent?.trim() || "Untitled",
-          link: n.getElementsByTagName("link")[0]?.textContent?.trim() || ""
-        })).filter(v => v.link);
+// Get requested ID from URL
+const urlParams = new URLSearchParams(window.location.search);
+let requestedId = urlParams.get("id");
 
-        renderList(items);
-        if (items.length) select(items[0]);
-      })
-      .catch(err => {
-        titleEl.textContent = "Failed to load archive.";
-        console.error("Archive load error:", err);
-      });
+// Fetch and render list
+fetch(XML_URL)
+  .then(r => r.text())
+  .then(txt => new DOMParser().parseFromString(txt, "text/xml"))
+  .then(xml => {
+    const nodes = Array.from(xml.getElementsByTagName("video"));
+    items = nodes.map(n => ({
+      id: n.getElementsByTagName("id")[0]?.textContent?.trim() || "",
+      name: n.getElementsByTagName("name")[0]?.textContent?.trim() || "Untitled",
+      link: n.getElementsByTagName("link")[0]?.textContent?.trim() || ""
+    })).filter(v => v.link);
 
-    function renderList(arr){
-      listEl.innerHTML = "";
-      arr.forEach((v, i) => {
-        const btn = document.createElement("button");
-        btn.className = "item";
-        btn.role = "option";
-        btn.textContent = v.name;
-        btn.addEventListener("click", () => select(v, btn));
-        listEl.appendChild(btn);
-        if (i===0) btn.classList.add("active");
-      });
-    }
+    renderList(items);
 
-    function select(video, btnEl){
-      document.querySelectorAll(".item.active").forEach(e => e.classList.remove("active"));
-      if (btnEl) btnEl.classList.add("active");
+    // Preselect video
+    let initialVideo = requestedId ? items.find(v => v.id === requestedId) : null;
+    if (!initialVideo && items.length) initialVideo = items[0];
+    if (initialVideo) select(initialVideo, document.querySelector(`.item[data-id="${initialVideo.id}"]`));
+  })
+  .catch(err => {
+    titleEl.textContent = "Failed to load archive.";
+    console.error("Archive load error:", err);
+  });
 
-      titleEl.textContent = video.name;
-      player.src = video.link;
-      player.play?.().catch(()=>{});
-    }
+function renderList(arr){
+  listEl.innerHTML = "";
+  arr.forEach((v, i) => {
+    const btn = document.createElement("button");
+    btn.className = "item";
+    btn.dataset.id = v.id;
+    btn.role = "option";
+    btn.textContent = v.name;
+    btn.addEventListener("click", () => select(v, btn));
+    listEl.appendChild(btn);
+  });
+}
 
-    // Simple search/filter
-    searchEl.addEventListener("input", () => {
-      const q = searchEl.value.toLowerCase();
-      const filtered = items.filter(v => v.name.toLowerCase().includes(q));
-      renderList(filtered);
-    });
+function select(video, btnEl){
+  document.querySelectorAll(".item.active").forEach(e => e.classList.remove("active"));
+  if (btnEl) btnEl.classList.add("active");
+
+  titleEl.textContent = video.name;
+  player.src = video.link;
+  player.play?.().catch(()=>{});
+
+  // Update URL without reload
+  if (video.id) {
+    history.replaceState(null, "", `?id=${encodeURIComponent(video.id)}`);
+  }
+}
+
+// Simple search/filter
+searchEl.addEventListener("input", () => {
+  const q = searchEl.value.toLowerCase();
+  const filtered = items.filter(v => v.name.toLowerCase().includes(q));
+  renderList(filtered);
+});
   </script>
 </body>
 </html>
