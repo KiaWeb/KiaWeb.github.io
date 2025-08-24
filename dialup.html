@@ -277,13 +277,12 @@
 
   <script>
 document.addEventListener('DOMContentLoaded', () => {
+  // Collect nodes safely
   const frames = ['frame-1','frame-2','frame-3']
-    .map(id => document.getElementById(id))
-    .filter(Boolean);
+    .map(id => document.getElementById(id)).filter(Boolean);
 
   const badges = ['b1','b2','b3']
-    .map(id => document.getElementById(id))
-    .filter(Boolean);
+    .map(id => document.getElementById(id)).filter(Boolean);
 
   const status = document.getElementById('status-left');
 
@@ -292,48 +291,62 @@ document.addEventListener('DOMContentLoaded', () => {
       f.classList.toggle('active', idx === i);
       f.classList.toggle('done',   idx <  i);
     });
-    badges.forEach((b, idx) => {
-      b.classList.toggle('active', idx === i);
-    });
+    badges.forEach((b, idx) => b.classList.toggle('active', idx === i));
     if (status) status.textContent = i === 0 ? "Dialing…" : i === 1 ? "Handshaking…" : "Online";
   }
 
-  // Permanently reveal an image (requires CSS rule .shown { opacity:1; visibility:visible; transform:none; })
+  // Permanently reveal the image for a given step
   function revealImage(stepIndex){
     const img = frames[stepIndex]?.querySelector('img');
-    if (img) img.classList.add('shown');
+    if (img) img.classList.add('shown'); // <- never gets removed
   }
 
-  function runTimeline(totalMs){
-    const total = Math.min(Math.max(totalMs, 3000), 12000);
-    const step  = Math.floor(total / 3);
+  // Pace steps across the clip; default 20s if parent doesn't tell us
+  function runTimeline(totalMs = 20000){
+    const safety = 1200;                         // leave ~1.2s before end
+    const total  = Math.max(3000, totalMs);      // guard rails
+    const t2     = Math.round(total * 0.35);     // ~7s for 20s clip
+    const t3     = Math.min(Math.round(total * 0.70), total - safety); // ~14s
 
+    // Step 1 immediately
     setStep(0);
     revealImage(0);
 
-    setTimeout(() => { setStep(1); revealImage(1); }, step);
-    setTimeout(() => { setStep(2); revealImage(2); }, step * 2);
+    // Step 2
+    setTimeout(() => {
+      setStep(1);
+      revealImage(1);
+    }, t2);
+
+    // Step 3
+    setTimeout(() => {
+      setStep(2);
+      revealImage(2);
+    }, t3);
+
+    // If you want to tell the parent we're done (optional):
+    // setTimeout(() => parent?.postMessage({type:'frames-finished'}, '*'), total);
   }
 
-  const defaultTotal = 6000;
-
+  // Listen for parent telling us the decoded MP3 duration (in ms)
   window.addEventListener('message', (e) => {
     const d = e?.data;
     if (!d || d.type !== 'dialup-duration') return;
-    const safety  = 1500;
-    const ms      = (typeof d.ms === 'number' && isFinite(d.ms)) ? d.ms : defaultTotal;
-    const planned = Math.max(3000, ms - safety);
     if (window.__dialFramesStarted) return;
     window.__dialFramesStarted = true;
-    runTimeline(planned);
+    // Use what parent sends; if it's weird, fall back to 20s
+    const ms = (typeof d.ms === 'number' && isFinite(d.ms)) ? d.ms : 20000;
+    runTimeline(ms);
   });
 
+  // Fallback (direct load or no message): assume 20s
   if (!window.__dialFramesStarted){
     window.__dialFramesStarted = true;
-    runTimeline(defaultTotal);
+    runTimeline(20000);
   }
 });
 </script>
+
 
 
 </body>
