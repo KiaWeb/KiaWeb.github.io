@@ -3,36 +3,42 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dial-Up: 3 Frames</title>
+  <title>Kia’s CDN — Dial-Up Connection</title>
   <style>
     :root{
-      --bg: #008080;         /* retro desktop teal */
-      --win-bg: #c0c0c0;     /* win98 gray */
+      --desktop: #008080;          /* retro desktop teal */
+      --win-bg: #c0c0c0;           /* win98 gray */
       --light: #ffffff;
       --mid: #dfdfdf;
       --shadow: #808080;
       --dark: #404040;
-      --title-a: #000080;    /* title gradient start */
-      --title-b: #1084d0;    /* title gradient end */
+      --title-a: #000080;          /* title gradient start */
+      --title-b: #1084d0;          /* title gradient end */
       --text: #000;
-      --active: #008000;     /* green accent when active */
+      --ok: #008000;               /* “online” green */
+      --accent: #005bbb;           /* linky blue */
       --font: Tahoma, "MS Sans Serif", "Segoe UI", Arial, sans-serif;
+
+      --cardMinH: 190px;
+      --icon: 110px;
     }
 
     html, body { height: 100%; }
-    body {
+    body{
       margin: 0;
-      background: var(--bg);
+      background: var(--desktop);
       font-family: var(--font);
       font-size: 12px;
       color: var(--text);
       display: grid;
       place-items: center;
+      -webkit-font-smoothing: none;
+      image-rendering: pixelated;
     }
 
-    /* window wrapper */
-    .win {
-      width: min(780px, 96vw);
+    /* Window shell */
+    .win{
+      width: min(820px, 96vw);
       background: var(--win-bg);
       border-top: 2px solid var(--light);
       border-left: 2px solid var(--light);
@@ -41,7 +47,7 @@
       padding: 2px;
       box-shadow: 0 0 0 1px var(--shadow);
     }
-    .win-inner {
+    .win-inner{
       border-top: 2px solid var(--mid);
       border-left: 2px solid var(--mid);
       border-bottom: 2px solid var(--shadow);
@@ -49,18 +55,23 @@
       background: var(--win-bg);
     }
 
-    /* titlebar */
-    .titlebar {
-      height: 24px;
-      display: flex; align-items: center; gap: 6px;
+    /* Titlebar */
+    .titlebar{
+      height: 26px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
       padding: 0 6px;
       background: linear-gradient(90deg, var(--title-a), var(--title-b));
-      color: #fff; font-weight: 700;
+      color: #fff;
+      font-weight: 700;
       border: 1px solid #000;
+      letter-spacing: 0.15px;
     }
 
-    .content {
-      padding: 10px;
+    /* Content well */
+    .content{
+      padding: 12px;
       background: #fff;
       border-top: 2px solid var(--shadow);
       border-left: 2px solid var(--shadow);
@@ -68,14 +79,55 @@
       border-right: 2px solid var(--light);
     }
 
-    /* three frames row */
-    .frames {
+    /* Header strip with progress */
+    .header{
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .header h2{ margin: 0; font-size: 14px; font-weight: 700; }
+    .progress{ display: flex; gap: 6px; align-items: center; font-size: 11px; }
+    .badge{
+      display: inline-grid; place-items: center;
+      width: 18px; height: 18px;
+      background: var(--win-bg);
+      border-top: 1px solid var(--light);
+      border-left: 1px solid var(--light);
+      border-bottom: 1px solid var(--dark);
+      border-right: 1px solid var(--dark);
+      font-weight: 700;
+    }
+    .badge.active{ outline: 1px dotted var(--ok); outline-offset: -3px; color: var(--ok); }
+
+    /* carrier bar */
+    .carrier{
+      position: relative; height: 8px; margin: 8px 0 14px 0;
+      background: #eaeaea;
+      border-top: 1px solid var(--mid);
+      border-left: 1px solid var(--mid);
+      border-bottom: 1px solid var(--shadow);
+      border-right: 1px solid var(--shadow);
+      overflow: hidden;
+    }
+    .carrier::before{
+      content:""; position:absolute; top:0; left:-40%;
+      width:40%; height:100%;
+      background: linear-gradient(90deg, transparent 0 20%, rgba(0,0,0,0.08) 50%, transparent 80% 100%);
+      animation: sweep 1.2s linear infinite;
+    }
+    @keyframes sweep{ to{ left:100%; } }
+
+    /* 3 Cards */
+    .frames{
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 12px;
     }
+    @media (max-width: 760px){ .frames{ grid-template-columns: 1fr; } }
 
-    .frame {
+    .frame{
       background: var(--win-bg);
       border-top: 2px solid var(--light);
       border-left: 2px solid var(--light);
@@ -83,42 +135,80 @@
       border-right: 2px solid var(--dark);
       padding: 2px;
     }
-    .frame-inner {
-      background: #fff;
+    .frame-inner{
+      background: #DBD9FF; /* requested */
       border-top: 2px solid var(--shadow);
       border-left: 2px solid var(--shadow);
       border-bottom: 2px solid var(--light);
       border-right: 2px solid var(--light);
-      padding: 8px;
+      padding: 10px;
       text-align: center;
-      min-height: 150px;
+      min-height: var(--cardMinH);
       display: grid;
       grid-template-rows: auto 1fr auto;
-      gap: 6px;
+      gap: 8px;
     }
-    .frame h3 {
-      margin: 0;
-      font-size: 13px;
-      font-weight: 700;
+    .frame h3{ margin: 0; font-size: 13px; font-weight: 700; }
+
+    /* CONSISTENT IMAGE SIZE so cards don’t jump */
+    .frame .frame-inner img{
+      width: var(--icon);
+      height: var(--icon);
+      max-width: 100%;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+      border: 0;
+      box-shadow: none;
     }
-    .frame img {
-      width: 96px; height: 96px; object-fit: contain; margin: 0 auto;
-      image-rendering: pixelated;
+
+    /* hide all step images by default */
+    /* default: hidden until revealed */
+	.frame img {
+	  opacity: 0;
+	  visibility: hidden;
+	  transform: translateY(6px);
+	  transition: none;          /* no tweening */
+	}
+
+	/* once revealed, never hide or tween */
+	.frame img.shown {
+	  opacity: 1 !important;
+	  visibility: visible !important;
+	  transform: none !important;
+	  transition: none !important;
+	}
+
+    /* only the active step’s image is visible */
+    .frame.active img{
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      transition: opacity 550ms ease, transform 550ms ease, visibility 0s;
     }
-    .frame .desc {
+
+    .desc{
       font-size: 11px; color: #333;
+      min-height: 2em;
+      display: grid; place-items: center;
     }
 
-    /* Active state (you can toggle with JS by adding/removing .active) */
-    .frame.active .frame-inner {
-      outline: 2px dotted var(--active);
+    /* Active / done highlights */
+    .frame.active .frame-inner{
+      outline: 2px dotted var(--ok);
       outline-offset: -4px;
-      box-shadow: 0 0 0 2px rgba(0,128,0,0.15) inset;
+      box-shadow: 0 0 0 2px rgba(0,128,0,0.12) inset;
+    }
+    .frame.done .frame-inner{
+      outline: 1px dotted #666;
+      outline-offset: -4px;
+      box-shadow: 0 0 0 2px rgba(0,0,0,0.06) inset;
+      opacity: 0.9;
     }
 
-    /* status bar */
-    .status {
-      margin-top: 10px;
+    /* Status bar */
+    .status{
+      margin-top: 12px;
       background: var(--win-bg);
       border-top: 1px solid var(--light);
       border-left: 1px solid var(--light);
@@ -126,11 +216,9 @@
       border-right: 1px solid var(--shadow);
       padding: 4px 8px;
       display: flex; justify-content: space-between; gap: 8px;
+      font-size: 11px;
     }
-
-    @media (max-width: 640px){
-      .frames { grid-template-columns: 1fr; }
-    }
+    .status .left{ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -138,24 +226,34 @@
     <div class="win-inner">
       <div class="titlebar">Kia’s CDN — Dial-Up Connection</div>
       <div class="content">
+
+        <div class="header">
+          <h2>Connecting to Kia’s CDN…</h2>
+          <div class="progress" aria-label="Connection steps">
+            <span class="badge active" id="b1">1</span> Dial
+            <span class="badge" id="b2">2</span> Handshake
+            <span class="badge" id="b3">3</span> Online
+          </div>
+        </div>
+
+        <div class="carrier" aria-hidden="true"></div>
+
         <div class="frames">
           <!-- Frame 1: Dialing -->
-          <section class="frame active" id="frame-1" aria-label="Step 1: Dialing">
+          <section class="frame active" id="frame-1" aria-live="polite" aria-label="Step 1: Dialing">
             <div class="frame-inner">
               <h3>Step 1 — Dialing</h3>
-              <!-- Replace src with your own icon -->
-              <img src="https://lightspeed.kiascdn.org/images/man1.jpg" alt="Dialing icon">
-              <div class="desc">Dialing access number…</div>
+              <img src="https://lightspeed.kiascdn.org/images/man1.jpg" alt="">
+              <div class="desc" id="desc1">Dialing access number…</div>
             </div>
           </section>
 
-          <!-- Frame 2: Handshake / Verifying -->
-          <section class="frame" id="frame-2" aria-label="Step 2: Handshaking">
+          <!-- Frame 2: Handshake -->
+          <section class="frame" id="frame-2" aria-label="Step 2: Handshake">
             <div class="frame-inner">
               <h3>Step 2 — Handshake</h3>
-              <!-- Replace src with your own icon -->
-              <img src="https://lightspeed.kiascdn.org/images/man2.jpg" alt="Modem handshake icon">
-              <div class="desc">Negotiating connection…</div>
+              <img src="https://lightspeed.kiascdn.org/images/man2.jpg" alt="">
+              <div class="desc" id="desc2">Negotiating connection…</div>
             </div>
           </section>
 
@@ -163,33 +261,80 @@
           <section class="frame" id="frame-3" aria-label="Step 3: Online">
             <div class="frame-inner">
               <h3>Step 3 — Online</h3>
-              <!-- Replace src with your own icon -->
-              <img src="https://lightspeed.kiascdn.org/images/man3.jpg" alt="Online / globe icon">
-              <div class="desc">Connected. Welcome to Kia’s CDN!</div>
+              <img src="https://lightspeed.kiascdn.org/images/man3.jpg" alt="">
+              <div class="desc" id="desc3">Connected. Welcome to Kia’s CDN!</div>
             </div>
           </section>
         </div>
 
-        <div class="status">
-          <span id="status-left">Ready</span>
+        <div class="status" role="status" aria-live="polite">
+          <span class="left" id="status-left">Ready</span>
           <span>INS&nbsp;&nbsp;CAPS&nbsp;&nbsp;NUM</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Optional: tiny demo script to cycle active frame (remove if not needed) -->
   <script>
-    // Simple preview: cycles active highlight every 1.2s
-    (function(){
-      const frames = [document.getElementById('frame-1'), document.getElementById('frame-2'), document.getElementById('frame-3')];
-      let i = 0;
-      setInterval(() => {
-        frames.forEach(f => f.classList.remove('active'));
-        frames[i].classList.add('active');
-        i = (i + 1) % frames.length;
-      }, 1200);
-    })();
-  </script>
+document.addEventListener('DOMContentLoaded', () => {
+  const frames = ['frame-1','frame-2','frame-3']
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+
+  const badges = ['b1','b2','b3']
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+
+  const status = document.getElementById('status-left');
+
+  function setStep(i){
+    frames.forEach((f, idx) => {
+      f.classList.toggle('active', idx === i);
+      f.classList.toggle('done',   idx <  i);
+    });
+    badges.forEach((b, idx) => {
+      b.classList.toggle('active', idx === i);
+    });
+    if (status) status.textContent = i === 0 ? "Dialing…" : i === 1 ? "Handshaking…" : "Online";
+  }
+
+  // Permanently reveal an image (requires CSS rule .shown { opacity:1; visibility:visible; transform:none; })
+  function revealImage(stepIndex){
+    const img = frames[stepIndex]?.querySelector('img');
+    if (img) img.classList.add('shown');
+  }
+
+  function runTimeline(totalMs){
+    const total = Math.min(Math.max(totalMs, 3000), 12000);
+    const step  = Math.floor(total / 3);
+
+    setStep(0);
+    revealImage(0);
+
+    setTimeout(() => { setStep(1); revealImage(1); }, step);
+    setTimeout(() => { setStep(2); revealImage(2); }, step * 2);
+  }
+
+  const defaultTotal = 6000;
+
+  window.addEventListener('message', (e) => {
+    const d = e?.data;
+    if (!d || d.type !== 'dialup-duration') return;
+    const safety  = 1500;
+    const ms      = (typeof d.ms === 'number' && isFinite(d.ms)) ? d.ms : defaultTotal;
+    const planned = Math.max(3000, ms - safety);
+    if (window.__dialFramesStarted) return;
+    window.__dialFramesStarted = true;
+    runTimeline(planned);
+  });
+
+  if (!window.__dialFramesStarted){
+    window.__dialFramesStarted = true;
+    runTimeline(defaultTotal);
+  }
+});
+</script>
+
+
 </body>
 </html>
