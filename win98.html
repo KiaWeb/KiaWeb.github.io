@@ -661,6 +661,7 @@
 
   // 👉 show the iframe with File 2 (the 3 frames)
   document.getElementById('dialFrames').style.display = 'block';
+  window.__fitWindowToIframe?.();
 
   try {
     let t = ctx.currentTime + 0.05;
@@ -689,6 +690,67 @@
 </script>
 
 
+<script>
+(function(){
+  const win  = document.getElementById('win');
+  const body = document.querySelector('.window-body');
+  const frame = document.getElementById('dialFrames');
+
+  const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+
+  function getIframeContentSize(iframe){
+    try {
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      const el = doc.documentElement, b = doc.body;
+      const w = Math.max(el.scrollWidth, b?.scrollWidth||0, el.offsetWidth, b?.offsetWidth||0);
+      const h = Math.max(el.scrollHeight, b?.scrollHeight||0, el.offsetHeight, b?.offsetHeight||0);
+      return { w, h };
+    } catch { return null; } // cross-origin fallback
+  }
+
+  function fitWindowToIframe(){
+    if (!win || !body || !frame) return;
+
+    // “chrome” = titlebar + menubar + statusbar + borders around body
+    const chromeW = win.offsetWidth  - body.clientWidth;
+    const chromeH = win.offsetHeight - body.clientHeight;
+
+    // desired inner size from child (fallback if we can't read it)
+    const inner = getIframeContentSize(frame) || { w: 820, h: 320 };
+
+    // keep within viewport (desktop has ~32px padding each side)
+    const maxWinW = document.documentElement.clientWidth  - 64;
+    const maxWinH = document.documentElement.clientHeight - 64;
+
+    // set width on outer window & height on content well
+    const targetWinW  = clamp(inner.w + chromeW, 560, maxWinW);
+    const targetBodyH = clamp(inner.h, 180, maxWinH - chromeH);
+
+    win.style.width     = targetWinW + 'px';
+    body.style.height   = targetBodyH + 'px';
+
+    // final safety: scale whole window down if it still overflows
+    requestAnimationFrame(() => {
+      const r  = win.getBoundingClientRect();
+      const sx = (window.innerWidth  - 16) / r.width;
+      const sy = (window.innerHeight - 16) / r.height;
+      const s  = Math.min(1, sx, sy);
+      win.style.transformOrigin = 'top left';
+      win.style.transform = `scale(${s})`;
+    });
+  }
+
+  // run when iframe loads, on window resize, or when the child pings us
+  frame?.addEventListener('load', fitWindowToIframe);
+  window.addEventListener('resize', fitWindowToIframe);
+  window.addEventListener('message', (e) => {
+    if (e?.data?.type === 'dialup-size') fitWindowToIframe();
+  });
+
+  // expose so your OK click can invoke it right after showing the iframe
+  window.__fitWindowToIframe = fitWindowToIframe;
+})();
+</script>
 
 
 </body>
