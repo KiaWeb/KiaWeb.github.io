@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Windows 98 Style Window</title>
+  <style>
+    :root{
+      --win98-bg: #c0c0c0;        /* classic gray */
+      --win98-light: #ffffff;     /* highlight */
+      --win98-mid: #dfdfdf;       /* mid highlight */
+      --win98-shadow: #808080;    /* shadow */
+      --win98-dark: #404040;      /* dark shadow */
+      --title-start: #000080;     /* active titlebar gradient start */
+      --title-end: #1084d0;       /* active titlebar gradient end */
+      --title-text: #ffffff;
+      --font: Tahoma, "MS Sans Serif", "Segoe UI", Arial, sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      background: #008080; /* Win98 default teal desktop */
+      font-family: var(--font);
+      font-size: 12px;
+      line-height: 1.3;
+      color: #000;
+      -webkit-font-smoothing: none; /* closer to pixel-y look */
+      image-rendering: pixelated;
+    }
+
+    /* Desktop centering helper */
+    .desktop {
+      min-height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 32px;
+    }
+
+    /* Window outer bevel (raised) */
+    .win98-window {
+      width: 560px;
+      box-sizing: border-box;
+      background: var(--win98-bg);
+      border-top: 2px solid var(--win98-light);
+      border-left: 2px solid var(--win98-light);
+      border-bottom: 2px solid var(--win98-dark);
+      border-right: 2px solid var(--win98-dark);
+      padding: 2px; /* inner ridge */
+      box-shadow: 0 0 0 1px var(--win98-shadow);
+      user-select: none;
+      position: relative;
+    }
+
+    /* Inner ridge to complete the beveled outline */
+    .win98-inner {
+      border-top: 2px solid var(--win98-mid);
+      border-left: 2px solid var(--win98-mid);
+      border-bottom: 2px solid var(--win98-shadow);
+      border-right: 2px solid var(--win98-shadow);
+      background: var(--win98-bg);
+    }
+
+    /* Title bar */
+    .titlebar {
+      height: 24px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 4px;
+      background: linear-gradient(90deg, var(--title-start), var(--title-end));
+      color: var(--title-text);
+      border: 1px solid #000;
+      cursor: move; /* hint it's draggable */
+    }
+
+    .titlebar .app-icon {
+      width: 16px; height: 16px;
+      background:
+        linear-gradient(#006400, #00a000);
+      border: 1px solid #000;
+      box-shadow: inset 1px 1px 0 0 rgba(255,255,255,0.4);
+    }
+
+    .titlebar .title {
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .titlebar .buttons { margin-left: auto; display: flex; gap: 2px; }
+
+    .title-btn {
+	  width: 18px;
+	  height: 18px;
+	  display: grid;
+	  place-items: center;
+	  background: var(--win98-bg);
+	  border-top: 1px solid var(--win98-light);
+	  border-left: 1px solid var(--win98-light);
+	  border-bottom: 1px solid var(--win98-dark);
+	  border-right: 1px solid var(--win98-dark);
+	  font-family: var(--font);
+	  font-size: 12px;   /* uniform font size */
+	  line-height: 1;
+	  font-weight: bold;
+	  padding: 0;
+	}
+
+    .title-btn:active {
+      border-top: 1px solid var(--win98-dark);
+      border-left: 1px solid var(--win98-dark);
+      border-bottom: 1px solid var(--win98-light);
+      border-right: 1px solid var(--win98-light);
+      padding-top: 1px; /* pressed illusion */
+      padding-left: 1px;
+    }
+    .btn-min { font-size: 12px; }
+    .btn-max { font-size: 11px; }
+    .btn-close { font-size: 12px; }
+
+    /* Menu bar */
+    .menu-bar {
+      background: var(--win98-bg);
+      padding: 2px 4px;
+      display: flex;
+      gap: 12px;
+      border-top: 1px solid var(--win98-light);
+      border-left: 1px solid var(--win98-light);
+      border-bottom: 1px solid var(--win98-shadow);
+      border-right: 1px solid var(--win98-shadow);
+    }
+    .menu-item { position: relative; padding: 0 4px; }
+    .menu-item:hover { background: #000080; color: #fff; }
+
+    /* Content area (sunken) */
+    .window-body {
+      margin: 6px;
+      background: #ffffff;
+      border-top: 2px solid var(--win98-shadow);
+      border-left: 2px solid var(--win98-shadow);
+      border-bottom: 2px solid var(--win98-light);
+      border-right: 2px solid var(--win98-light);
+      padding: 12px;
+      min-height: 160px;
+    }
+
+    /* Status bar (raised) */
+    .status-bar {
+      margin: 6px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px;
+      background: var(--win98-bg);
+      border-top: 1px solid var(--win98-light);
+      border-left: 1px solid var(--win98-light);
+      border-bottom: 1px solid var(--win98-shadow);
+      border-right: 1px solid var(--win98-shadow);
+      padding: 2px 6px;
+    }
+    .status-left { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .status-right { display: flex; align-items: center; gap: 8px; }
+
+    /* Optional selection rectangle look */
+    .focus-rect {
+      outline: 1px dotted #000;
+      outline-offset: -3px;
+    }
+
+    /* Resize handle visual (bottom-right) */
+    .resize-grip {
+      position: absolute;
+      right: 6px; bottom: 6px;
+      width: 12px; height: 12px;
+      background:
+        linear-gradient(135deg, transparent 0 50%, var(--win98-shadow) 50% 100%),
+        linear-gradient(135deg, transparent 0 66%, var(--win98-light) 66% 100%);
+      pointer-events: none; /* just a visual */
+    }
+
+    a { color: #000080; }
+	.win98-btn {
+	display: inline-block;
+	min-width: 75px;
+	padding: 2px 12px;
+	box-sizing: border-box;
+	background: var(--win98-bg);
+	font-family: var(--font);
+	font-size: 12px;
+	line-height: 1.2;
+	border-top: 2px solid var(--win98-light);
+	border-left: 2px solid var(--win98-light);
+	border-bottom: 2px solid var(--win98-dark);
+	border-right: 2px solid var(--win98-dark);
+	cursor: default;
+	position: relative;
+	transition: transform 20ms linear;
+	}
+	.win98-btn:active {
+	border-top: 2px solid var(--win98-dark);
+	border-left: 2px solid var(--win98-dark);
+	border-bottom: 2px solid var(--win98-light);
+	border-right: 2px solid var(--win98-light);
+	transform: translate(1px, 1px); /* visual press without changing layout */
+	box-shadow: inset 1px 1px 0 0 rgba(0,0,0,0.15);
+	}
+.window-body {
+  position: relative; /* for absolute iframe positioning */
+  overflow: hidden;   /* just in case */
+}
+
+#dialFrames {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: none;
+  z-index: 5;   /* sits above body content */
+}
+
+
+
+  </style>
+
+
+</head>
+<body>
+  <div class="desktop">
+    <div class="win98-window" id="win">
+      <div class="win98-inner">
+        <div class="titlebar" id="titlebar">
+          <div class="app-icon" aria-hidden="true"></div>
+          <div class="title">Kia's CDN Networking for Windows 98</div>
+          <div class="buttons" role="group" aria-label="Window controls">
+			  <button class="title-btn btn-min" title="Minimize" aria-label="Minimize">―</button>
+			  <button class="title-btn btn-max" title="Maximize" aria-label="Maximize">▢</button>
+			  <button class="title-btn btn-close" title="Close" aria-label="Close">×</button>
+		  </div>
+
+        </div>
+
+        <nav class="menu-bar" aria-label="Menu">
+          <div class="menu-item" tabindex="0">File</div>
+          <div class="menu-item" tabindex="0">Edit</div>
+          <div class="menu-item" tabindex="0">View</div>
+          <div class="menu-item" tabindex="0">Help</div>
+        </nav>
+
+        <main class="window-body focus-rect" tabindex="0">
+          <p><b>Welcome to Kia's CDN Networking!</b></p>
+		  <p><i>networking on another level</i></p>
+		  <p><b><i>NOTE: Texas state laws require us to notify which data is being used. This form will NOT submit any phone numbers. It will only play noises based on the numbers. You may mute the numbers to prevent leaks of it.</b></i></p>
+
+          <form>
+            <label>Dial-up number<br>
+			<label for="country">Choose your country:</label>
+			<select id="country" name="country">
+			  <option value="+93">Afghanistan (+93)</option>
+			  <option value="+355">Albania (+355)</option>
+			  <option value="+213">Algeria (+213)</option>
+			  <option value="+376">Andorra (+376)</option>
+			  <option value="+244">Angola (+244)</option>
+			  <option value="+1">Antigua and Barbuda (+1)</option>
+			  <option value="+54">Argentina (+54)</option>
+			  <option value="+374">Armenia (+374)</option>
+			  <option value="+61">Australia (+61)</option>
+			  <option value="+43">Austria (+43)</option>
+			  <option value="+994">Azerbaijan (+994)</option>
+			  <option value="+1">Bahamas (+1)</option>
+			  <option value="+973">Bahrain (+973)</option>
+			  <option value="+880">Bangladesh (+880)</option>
+			  <option value="+1">Barbados (+1)</option>
+			  <option value="+375">Belarus (+375)</option>
+			  <option value="+32">Belgium (+32)</option>
+			  <option value="+501">Belize (+501)</option>
+			  <option value="+229">Benin (+229)</option>
+			  <option value="+975">Bhutan (+975)</option>
+			  <option value="+591">Bolivia (+591)</option>
+			  <option value="+387">Bosnia and Herzegovina (+387)</option>
+			  <option value="+267">Botswana (+267)</option>
+			  <option value="+55">Brazil (+55)</option>
+			  <option value="+673">Brunei (+673)</option>
+			  <option value="+359">Bulgaria (+359)</option>
+			  <option value="+226">Burkina Faso (+226)</option>
+			  <option value="+257">Burundi (+257)</option>
+			  <option value="+855">Cambodia (+855)</option>
+			  <option value="+237">Cameroon (+237)</option>
+			  <option value="+1">Canada (+1)</option>
+			  <option value="+238">Cape Verde (+238)</option>
+			  <option value="+236">Central African Republic (+236)</option>
+			  <option value="+235">Chad (+235)</option>
+			  <option value="+56">Chile (+56)</option>
+			  <option value="+86">China (+86)</option>
+			  <option value="+57">Colombia (+57)</option>
+			  <option value="+269">Comoros (+269)</option>
+			  <option value="+243">Congo, Dem. Rep. (+243)</option>
+			  <option value="+242">Congo, Rep. (+242)</option>
+			  <option value="+506">Costa Rica (+506)</option>
+			  <option value="+385">Croatia (+385)</option>
+			  <option value="+53">Cuba (+53)</option>
+			  <option value="+357">Cyprus (+357)</option>
+			  <option value="+420">Czech Republic (+420)</option>
+			  <option value="+45">Denmark (+45)</option>
+			  <option value="+253">Djibouti (+253)</option>
+			  <option value="+1">Dominica (+1)</option>
+			  <option value="+1">Dominican Republic (+1)</option>
+			  <option value="+593">Ecuador (+593)</option>
+			  <option value="+20">Egypt (+20)</option>
+			  <option value="+503">El Salvador (+503)</option>
+			  <option value="+240">Equatorial Guinea (+240)</option>
+			  <option value="+291">Eritrea (+291)</option>
+			  <option value="+372">Estonia (+372)</option>
+			  <option value="+251">Ethiopia (+251)</option>
+			  <option value="+679">Fiji (+679)</option>
+			  <option value="+358">Finland (+358)</option>
+			  <option value="+33">France (+33)</option>
+			  <option value="+241">Gabon (+241)</option>
+			  <option value="+220">Gambia (+220)</option>
+			  <option value="+995">Georgia (+995)</option>
+			  <option value="+49">Germany (+49)</option>
+			  <option value="+233">Ghana (+233)</option>
+			  <option value="+30">Greece (+30)</option>
+			  <option value="+1">Grenada (+1)</option>
+			  <option value="+502">Guatemala (+502)</option>
+			  <option value="+224">Guinea (+224)</option>
+			  <option value="+245">Guinea-Bissau (+245)</option>
+			  <option value="+592">Guyana (+592)</option>
+			  <option value="+509">Haiti (+509)</option>
+			  <option value="+504">Honduras (+504)</option>
+			  <option value="+36">Hungary (+36)</option>
+			  <option value="+354">Iceland (+354)</option>
+			  <option value="+91">India (+91)</option>
+			  <option value="+62">Indonesia (+62)</option>
+			  <option value="+98">Iran (+98)</option>
+			  <option value="+964">Iraq (+964)</option>
+			  <option value="+353">Ireland (+353)</option>
+			  <option value="+972">Israel (+972)</option>
+			  <option value="+39">Italy (+39)</option>
+			  <option value="+1">Jamaica (+1)</option>
+			  <option value="+81">Japan (+81)</option>
+			  <option value="+962">Jordan (+962)</option>
+			  <option value="+7">Kazakhstan (+7)</option>
+			  <option value="+254">Kenya (+254)</option>
+			  <option value="+686">Kiribati (+686)</option>
+			  <option value="+850">North Korea (+850)</option>
+			  <option value="+82">South Korea (+82)</option>
+			  <option value="+965">Kuwait (+965)</option>
+			  <option value="+996">Kyrgyzstan (+996)</option>
+			  <option value="+856">Laos (+856)</option>
+			  <option value="+371">Latvia (+371)</option>
+			  <option value="+961">Lebanon (+961)</option>
+			  <option value="+266">Lesotho (+266)</option>
+			  <option value="+231">Liberia (+231)</option>
+			  <option value="+218">Libya (+218)</option>
+			  <option value="+423">Liechtenstein (+423)</option>
+			  <option value="+370">Lithuania (+370)</option>
+			  <option value="+352">Luxembourg (+352)</option>
+			  <option value="+389">North Macedonia (+389)</option>
+			  <option value="+261">Madagascar (+261)</option>
+			  <option value="+265">Malawi (+265)</option>
+			  <option value="+60">Malaysia (+60)</option>
+			  <option value="+960">Maldives (+960)</option>
+			  <option value="+223">Mali (+223)</option>
+			  <option value="+356">Malta (+356)</option>
+			  <option value="+692">Marshall Islands (+692)</option>
+			  <option value="+222">Mauritania (+222)</option>
+			  <option value="+230">Mauritius (+230)</option>
+			  <option value="+52">Mexico (+52)</option>
+			  <option value="+691">Micronesia (+691)</option>
+			  <option value="+373">Moldova (+373)</option>
+			  <option value="+377">Monaco (+377)</option>
+			  <option value="+976">Mongolia (+976)</option>
+			  <option value="+382">Montenegro (+382)</option>
+			  <option value="+212">Morocco (+212)</option>
+			  <option value="+258">Mozambique (+258)</option>
+			  <option value="+95">Myanmar (+95)</option>
+			  <option value="+264">Namibia (+264)</option>
+			  <option value="+674">Nauru (+674)</option>
+			  <option value="+977">Nepal (+977)</option>
+			  <option value="+31">Netherlands (+31)</option>
+			  <option value="+64">New Zealand (+64)</option>
+			  <option value="+505">Nicaragua (+505)</option>
+			  <option value="+227">Niger (+227)</option>
+			  <option value="+234">Nigeria (+234)</option>
+			  <option value="+47">Norway (+47)</option>
+			  <option value="+968">Oman (+968)</option>
+			  <option value="+92">Pakistan (+92)</option>
+			  <option value="+680">Palau (+680)</option>
+			  <option value="+970">Palestine (+970)</option>
+			  <option value="+507">Panama (+507)</option>
+			  <option value="+675">Papua New Guinea (+675)</option>
+			  <option value="+595">Paraguay (+595)</option>
+			  <option value="+51">Peru (+51)</option>
+			  <option value="+63">Philippines (+63)</option>
+			  <option value="+48">Poland (+48)</option>
+			  <option value="+351">Portugal (+351)</option>
+			  <option value="+974">Qatar (+974)</option>
+			  <option value="+40">Romania (+40)</option>
+			  <option value="+7">Russia (+7)</option>
+			  <option value="+250">Rwanda (+250)</option>
+			  <option value="+1">Saint Kitts and Nevis (+1)</option>
+			  <option value="+1">Saint Lucia (+1)</option>
+			  <option value="+1">Saint Vincent and the Grenadines (+1)</option>
+			  <option value="+685">Samoa (+685)</option>
+			  <option value="+378">San Marino (+378)</option>
+			  <option value="+239">Sao Tome and Principe (+239)</option>
+			  <option value="+966">Saudi Arabia (+966)</option>
+			  <option value="+221">Senegal (+221)</option>
+			  <option value="+381">Serbia (+381)</option>
+			  <option value="+248">Seychelles (+248)</option>
+			  <option value="+232">Sierra Leone (+232)</option>
+			  <option value="+65">Singapore (+65)</option>
+			  <option value="+421">Slovakia (+421)</option>
+			  <option value="+386">Slovenia (+386)</option>
+			  <option value="+677">Solomon Islands (+677)</option>
+			  <option value="+252">Somalia (+252)</option>
+			  <option value="+27">South Africa (+27)</option>
+			  <option value="+211">South Sudan (+211)</option>
+			  <option value="+34">Spain (+34)</option>
+			  <option value="+94">Sri Lanka (+94)</option>
+			  <option value="+249">Sudan (+249)</option>
+			  <option value="+597">Suriname (+597)</option>
+			  <option value="+268">Eswatini (+268)</option>
+			  <option value="+46">Sweden (+46)</option>
+			  <option value="+41">Switzerland (+41)</option>
+			  <option value="+963">Syria (+963)</option>
+			  <option value="+886">Taiwan (+886)</option>
+			  <option value="+992">Tajikistan (+992)</option>
+			  <option value="+255">Tanzania (+255)</option>
+			  <option value="+66">Thailand (+66)</option>
+			  <option value="+228">Togo (+228)</option>
+			  <option value="+676">Tonga (+676)</option>
+			  <option value="+1">Trinidad and Tobago (+1)</option>
+			  <option value="+216">Tunisia (+216)</option>
+			  <option value="+90">Turkey (+90)</option>
+			  <option value="+993">Turkmenistan (+993)</option>
+			  <option value="+688">Tuvalu (+688)</option>
+			  <option value="+256">Uganda (+256)</option>
+			  <option value="+380">Ukraine (+380)</option>
+			  <option value="+971">United Arab Emirates (+971)</option>
+			  <option value="+44">United Kingdom (+44)</option>
+			  <option value="+1">United States (+1)</option>
+			  <option value="+598">Uruguay (+598)</option>
+			  <option value="+998">Uzbekistan (+998)</option>
+			  <option value="+678">Vanuatu (+678)</option>
+			  <option value="+379">Vatican City (+379)</option>
+			  <option value="+58">Venezuela (+58)</option>
+			  <option value="+84">Vietnam (+84)</option>
+			  <option value="+967">Yemen (+967)</option>
+			  <option value="+260">Zambia (+260)</option>
+			  <option value="+263">Zimbabwe (+263)</option>
+			</select>
+
+			<input id="phone" type="tel" placeholder="(248) 434-5508" style="width: 240px;">
+			</label>
+			<br><br>
+			<button type="button" id="okBtn" class="win98-btn">OK</button>
+			<button type="reset" class="win98-btn">Cancel</button>
+          </form>
+		  <iframe id="dialFrames" src="dialup.html" style="width:100%;height:260px;border:none;display:none;"></iframe>
+
+        </main>
+
+        <footer class="status-bar" aria-label="Status bar">
+          <div class="status-left">Ready</div>
+          <div class="status-right"><span>INS</span><span>CAPS</span><span>NUM</span></div>
+        </footer>
+      </div>
+      <div class="resize-grip" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <script>
+    // Simple drag logic for the window (titlebar as handle)
+    (function(){
+      const win = document.getElementById('win');
+      const bar = document.getElementById('titlebar');
+      let startX = 0, startY = 0, startLeft = 0, startTop = 0, dragging = false;
+
+      // Position the window nicely if viewport is small
+      const rect = win.getBoundingClientRect();
+      if (rect.top < 8 || rect.left < 8) {
+        win.style.position = 'relative';
+      }
+
+      bar.addEventListener('pointerdown', (e) => {
+        dragging = true;
+        win.setPointerCapture(e.pointerId);
+        const r = win.getBoundingClientRect();
+        startX = e.clientX; startY = e.clientY;
+        startLeft = r.left + window.scrollX; startTop = r.top + window.scrollY;
+        win.style.position = 'absolute';
+        win.style.left = startLeft + 'px';
+        win.style.top = startTop + 'px';
+      });
+
+      window.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        win.style.left = (startLeft + dx) + 'px';
+        win.style.top  = (startTop  + dy) + 'px';
+      });
+
+      window.addEventListener('pointerup', () => { dragging = false; });
+    })();
+  </script>
+<script>
+  (function(){
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const PHONE_INPUT = document.getElementById('phone');
+    const OK = document.getElementById('okBtn');
+    const COUNTRY = document.getElementById('country');
+    const STATUS = document.querySelector('.status-left');
+
+    const MESSAGES = [
+      "Beaming the moon…",
+      "Negotiating handshakes…",
+      "Squealing at 56k…",
+      "Herding packets…",
+      "Reticulating splines…",
+      "Buffering chirps…",
+      "PPP whispering to UART…",
+      "Modem warms up…",
+      "Ping-ponging carriers…",
+      "Phase shifting reality…",
+      "V.90 karaoke mode…",
+      "CRC sprinkling…",
+      "Mounting space hamsters…",
+      "Spooling magic smoke…",
+      "Poking DNS with a stick…",
+      "Establishing psychic link…",
+      "Rewiring the ether…",
+      "Asking satellites nicely…",
+      "Counting electrons…",
+      "Untangling copper vibes…"
+    ];
+    const randBetween = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
+
+    const ROW = { '1':697, '2':697, '3':697, '4':770, '5':770, '6':770, '7':852, '8':852, '9':852, '*':941, '0':941, '#':941 };
+    const COL = { '1':1209,'2':1336,'3':1477,'4':1209,'5':1336,'6':1477,'7':1209,'8':1336,'9':1477,'*':1209,'0':1336,'#':1477 };
+
+    const digitsOnly = (s) => (s.match(/\d+/g) || []).join('');
+
+    function getMaxLocalDigits(ccDigits){
+      const opt = COUNTRY?.selectedOptions?.[0];
+      const fromData = opt?.dataset?.nsnMax;
+      if (fromData && !Number.isNaN(+fromData)) return Math.max(0, +fromData | 0);
+      const fallback = 15 - (ccDigits?.length || 0);
+      return Math.max(0, fallback);
+    }
+
+    function enforceMaxDigits(rawLocal, ccDigits){
+      const only = digitsOnly(rawLocal);
+      const maxLocal = getMaxLocalDigits(ccDigits);
+      return (only.length <= maxLocal) ? only : only.slice(0, maxLocal);
+    }
+
+    function playDTMF(digit, startTime){
+      const t0 = startTime ?? ctx.currentTime;
+
+      if (digit === '+') {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.value = 1000;
+        gain.gain.setValueAtTime(0, t0);
+        gain.gain.linearRampToValueAtTime(0.15, t0 + 0.01);
+        gain.gain.setValueAtTime(0.15, t0 + 0.12);
+        gain.gain.linearRampToValueAtTime(0, t0 + 0.17);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(t0);
+        osc.stop(t0 + 0.2);
+        return t0 + 0.22;
+      }
+
+      if (!(digit in ROW)) return t0;
+      const r = ROW[digit], c = COL[digit];
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc1.type = 'sine'; osc2.type = 'sine';
+      osc1.frequency.value = r;  osc2.frequency.value = c;
+
+      gain.gain.setValueAtTime(0, t0);
+      gain.gain.linearRampToValueAtTime(0.14, t0 + 0.01);
+      gain.gain.setValueAtTime(0.14, t0 + 0.12);
+      gain.gain.linearRampToValueAtTime(0, t0 + 0.17);
+
+      osc1.connect(gain); osc2.connect(gain); gain.connect(ctx.destination);
+      osc1.start(t0);     osc2.start(t0);
+      osc1.stop(t0 + 0.2); osc2.stop(t0 + 0.2);
+      return t0 + 0.22;
+    }
+
+    async function playFinalSound(startTime){
+      const response = await fetch("https://lightspeed.kiascdn.org/sounds/dialup.mp3");
+      const arrayBuffer = await response.arrayBuffer();
+      const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+
+      return new Promise((resolve) => {
+        const source = ctx.createBufferSource();
+        source.buffer = audioBuffer;
+        source.connect(ctx.destination);
+
+        let spinTimer = null;
+        const spin = () => {
+          if (STATUS) STATUS.textContent = MESSAGES[randBetween(0, MESSAGES.length-1)];
+          const next = randBetween(1500, 2500); // slower
+          spinTimer = setTimeout(spin, next);
+        };
+
+        if (STATUS) STATUS.textContent = MESSAGES[randBetween(0, MESSAGES.length-1)];
+        spin();
+
+        source.onended = () => {
+          if (spinTimer) clearTimeout(spinTimer);
+          if (STATUS) STATUS.textContent = "Ready";
+          resolve();
+        };
+
+        source.start(startTime);
+      });
+    }
+
+    PHONE_INPUT?.addEventListener('input', () => {
+      const ccDigits = digitsOnly(COUNTRY?.value || '');
+      const trimmed = enforceMaxDigits(PHONE_INPUT.value, ccDigits);
+      if (trimmed !== PHONE_INPUT.value) {
+        PHONE_INPUT.value = trimmed;
+      } else {
+        const only = digitsOnly(PHONE_INPUT.value);
+        if (only !== PHONE_INPUT.value) PHONE_INPUT.value = only;
+      }
+    });
+
+    OK?.addEventListener('click', async () => {
+  const ccDigits = digitsOnly(COUNTRY?.value || '');
+  let userDigits = enforceMaxDigits(PHONE_INPUT.value, ccDigits);
+  PHONE_INPUT.value = userDigits;
+
+  if (!userDigits) {
+    PHONE_INPUT.classList.add('shake');
+    setTimeout(() => PHONE_INPUT.classList.remove('shake'), 300);
+    return;
+  }
+
+  if (ctx.state === 'suspended') await ctx.resume();
+
+  OK.disabled = true;
+  OK.style.opacity = '0.5';
+  OK.style.pointerEvents = 'none';
+  OK.setAttribute('aria-busy', 'true');
+  if (STATUS) STATUS.textContent = "Dialing…";
+
+  // 👉 show the iframe with File 2 (the 3 frames)
+  document.getElementById('dialFrames').style.display = 'block';
+  document.getElementById('dialFrames').src = "file2.html"; // adjust path
+
+  try {
+    let t = ctx.currentTime + 0.05;
+    for (const ch of ['+'].concat(ccDigits.split(''), userDigits.split(''))) {
+      t = playDTMF(ch, t);
+    }
+
+    // Wait for MP3 to finish
+    await playFinalSound(t);
+
+    // Redirect after MP3 + File2 animation
+    window.location.href = "https://www.kiascdn.org";
+
+  } catch (e) {
+    console.error(e);
+    if (STATUS) STATUS.textContent = "Ready";
+  } finally {
+    OK.disabled = false;
+    OK.style.opacity = '';
+    OK.style.pointerEvents = '';
+    OK.removeAttribute('aria-busy');
+  }
+});
+
+  })();
+</script>
+
+
+
+
+</body>
+</html>
